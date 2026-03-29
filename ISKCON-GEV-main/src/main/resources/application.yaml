@@ -1,0 +1,26 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: YOUR_GOOGLE_CLIENT_ID
+            client-secret: YOUR_GOOGLE_CLIENT_SECRET
+            scope:
+              - email
+              - profile
+  datasource:
+    url: jdbc:postgresql://localhost:5432/donations
+    username: postgres
+    password: 068999
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  jwt:
+    secret: harekrishna_harekrishna_krishnakrishna_harehare
+    expiration: 10800000 # 3 hours in milliseconds
+    

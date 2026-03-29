@@ -1,0 +1,40 @@
+HELP.md
+target/
+src/main/resources/static/uploads/images
+src/main/resources/static/uploads/images-sm
+resources/META-INF
+src/main/resources/iskcon-ciam-firebase-adminsdk-ymugz-de8baf122d.json
+resources/META-INF/additional-spring-configuration-metadata.json
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.env
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
