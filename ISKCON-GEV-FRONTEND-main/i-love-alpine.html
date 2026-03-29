@@ -1,0 +1,887 @@
+<html>
+<head>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="/donation_page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/trajan-pro" rel="stylesheet">
+</head>
+<body>
+
+
+    <section class="bg-transparent bg-gradient-to-b from-[#096B70] to-white">
+
+    <div >
+    <section class="p-[30px] mb-4">
+
+   <div class="flex justify-center ...">
+    <div><h2 class="font-trajan-pro leading-[1.6] text-[42px] font-thin antialiased tracking-wide mb-5 text-white">DONATE</h2></div>
+  </div>
+
+  <div class="grid grid-flow-col justify-items-center">
+    <div>
+        <p class="font-bold font-[Roboto] tracking-wide text-[20px] text-white mb-4">
+            <strong>
+                As said in Bhagavad Gita 18.5
+            </strong>
+            <br>
+            Acts of sacrifice, charity and penance are not to be given up; they must be performed.
+            <br>
+            Indeed, sacrifice, charity and penance purify even the great souls.
+        </p>
+    </div>
+  </div>
+</section>
+
+<span class="relative flex size-3">
+    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+    <span class="relative inline-flex size-3 rounded-full bg-sky-500"></span>
+  </span>
+        
+</div>
+
+</section>
+
+<div
+  x-data="categoryButtons()"
+  x-init="fetchCategories() fetchAllSubCategories();">
+
+  <div class="flex justify-center px-4 sm:px-10 md:px-20 lg:px-40 flex-wrap gap-2">
+  <button
+    class="px-4 py-2 bg-[#096b70] rounded-full text-white hover:opacity-75 focus:outline-none"
+    x-on:click="fetchAllSubCategories()"
+>
+    All
+  </button>
+
+  <template x-for="category in categories" :key="category.id">
+    <button
+      class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none"
+      x-text="category.name"
+      x-on:click="fetchSubCategories(category.id)."
+    ></button>
+  </template>
+
+  <template x-if="loadingCategory">
+    <p class="text-gray-500 mt-2">Loading categories...</p>
+  </template>
+</div>
+<!-- Donation Causes Cards-->
+
+<div class="p-4 lg:px-40 md:px-8 sm:px-10">
+
+  <!-- <div class="p-4 lg:px-10 lg:pb-8 md:px-8 sm:px-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="card">
+        <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+        <div class="h-44 md:h-50 overflow-hidden"> 
+            <img src="https://iskcongev.com/wp-content/uploads/2024/03/Special-Services.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+        </div>
+        <div class="flex flex-col gap-4 p-6">
+            <h3 class="font-['Trajan_Pro'] text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" aria-describedby="tripDescription">Sri Giriraj Seva</h3>
+            <button x-data @click="window.open('http://127.0.0.1:5500/donation_description.html','_blank')" type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+        </div>
+    </article>
+      </div>
+      <div class="card">
+        <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+          <div class="h-44 md:h-50 overflow-hidden"> 
+              <img src="https://www.jansatta.com/wp-content/uploads/2023/07/shaligram-puja.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+          </div>
+          <div class="flex flex-col gap-4 p-6">
+              <h3 class="font-['Trajan_Pro'] text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" aria-describedby="tripDescription">Sri Shaligram Seva</h3>
+        
+              <button type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+          </div>
+      </article>
+      </div>
+      <div class="card">
+        <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+          <div class="h-44 md:h-50 overflow-hidden"> 
+              <img src="https://pbs.twimg.com/media/Gr2f9U_XYAALCD7.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+          </div>
+          <div class="flex flex-col gap-4 p-6">
+              <h3 class="font-['Trajan_Pro'] text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" aria-describedby="tripDescription">Radha Madanmohan</h3>
+        
+              <button type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+          </div>
+      </article>
+      </div>
+      <div class="card">
+        <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+          <div class="h-44 md:h-50 overflow-hidden"> 
+              <img src="https://iskcongev.com/wp-content/uploads/2024/03/Deity-Seva.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+          </div>
+          <div class="flex flex-col gap-4 p-6">
+              <h3 class="font-['Trajan_Pro']  text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" aria-describedby="tripDescription">Radha Vrindaban Behari</h3>
+        
+              <button type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+          </div>
+      </article>
+      </div>
+    </div>
+    </div>
+
+  <div class="px-10 pb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="card">
+        <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+        <div class="h-44 md:h-50 overflow-hidden"> 
+            <img src="https://iskcongev.com/wp-content/uploads/2022/07/prasadam.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+        </div>
+        <div class="flex flex-col gap-4 p-6">
+            <h3 class="font-['Trajan_Pro'] text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" aria-describedby="tripDescription">Annadaan Donation</h3>
+      
+            <button type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+        </div>
+    </article>
+      </div>
+      <div class="card">
+        <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+          <div class="h-44 md:h-50 overflow-hidden"> 
+              <img src="https://iskcongev.com/wp-content/uploads/2024/03/Goseva.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+          </div>
+          <div class="flex flex-col gap-4 p-6">
+              <h3 class="font-['Trajan_Pro'] text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" aria-describedby="tripDescription">GoSeva</h3>
+        
+              <button type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+          </div>
+      </article>
+      </div>
+      <div class="card">
+        <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+          <div class="h-44 md:h-50 overflow-hidden"> 
+              <img src="https://iskcongev.com/wp-content/uploads/2024/03/Sadhu-Bhojan-Seva.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+          </div>
+          <div class="flex flex-col gap-4 p-6">
+              <h3 class="font-['Trajan_Pro'] text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" aria-describedby="tripDescription">Sadhu Bhojan Seva</h3>
+        
+              <button type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+          </div>
+      </article>
+      </div>
+      <div class="card">
+        <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+          <div class="h-44 md:h-50 overflow-hidden"> 
+              <img src="https://iskcongev.com/wp-content/uploads/2023/01/Daily_Yajna.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+          </div>
+          <div class="flex flex-col gap-4 p-6">
+              <h3 class="font-['Trajan_Pro'] text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" aria-describedby="tripDescription">Daily Yajna</h3>
+        
+              <button type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+          </div>
+      </article>
+      </div>
+    </div>
+    </div> -->
+
+    <div class="px-10 pb-8">
+      <template x-if="loadingSubCategory">
+        <p class="text-gray-500 mt-2 text-center">Loading Sub Categories...</p>
+      </template>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <template x-for="subCategory in subCategories" :key="subCategory.id">
+        <div class="card">
+          <article class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">
+          <div class="h-44 md:h-50 overflow-hidden"> 
+              <img src="http://localhost:8080/uploads/images/1750253811649_Deity-Seva.jpg" class="w-full transition duration-700 ease-out group-hover:scale-105" alt="view of a coastal Mediterranean village on a hillside, with small boats in the water." />
+          </div>
+          <div class="flex flex-col gap-4 p-6">
+              <h3
+              x-text="subCategory.name"
+              class="font-['Trajan_Pro'] text-md font-normal text-on-surface-strong dark:text-on-surface-dark-strong" 
+              aria-describedby="tripDescription"></h3>
+        
+              <button type="button" class="bg-[#DD9B26] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius">Donate Now</button>
+          </div>
+      </article>
+        </div>
+      </template>
+      </div>
+      </div>
+</div>
+</div>
+
+<!-- <div class="flex justify-center px-4 sm:px-10 md:px-20 lg:px-40 flex-wrap gap-2">
+  <button class="px-4 py-2 bg-[#096b70] rounded-full text-white hover:opacity-75 focus:outline-none">
+    All
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    DIETY SEVA
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    ANNADAAN SEVA
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    GOSEVA
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    SADHU BHOJAN SEVA
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    VRINDAVAN FOREST
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    FESTIVAL SEVA
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    EKADASHI SEVA
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    EDUCATION
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    UNITE2GEV
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    RECURRING DONATION
+  </button>
+  <button class="px-4 py-2 rounded-full bg-[#096b70] text-white hover:opacity-75 focus:outline-none">
+    SPECIAL SERVICES
+  </button>
+</div> -->
+
+
+</body>
+</html>
+
+<div 
+x-show="causeList.length > 0"
+x-cloak
+class="fixed inset-x-0 bottom-0 justify-between flex py-4 
+bg-[linear-gradient(90deg,_rgba(9,107,112,1)_0%,_rgba(20,57,82,1)_100%)] z-[2] h-[85px] text-white
+dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark border-b">
+    <div class="pl-50 ">
+      <p class="text-md sm:text-sm text-pretty">Donations</p>
+      <p class="hover:underline text-lg font-bold">
+        <template x-for="(item, idx) in causeList" :key="item.id">
+          <span>
+            <span x-text="item.causeame"></span>
+            <span x-text="' x' + item.quantity"></span>
+            <template x-if="idx !== causeList.length - 1">, </template>
+          </span>
+        </template>
+      </p>
+    </div>
+
+    <div class="flex align-right pr-50">
+      <p class="px-6 mt-3 text-lg font-bold">₹ 3,300</p>
+     
+      <div x-data="{modalIsOpen: false}">
+        <button  x-on:click="modalIsOpen = true" type="button" class="rounded-md bg-[#800020] border-3 border-[#FF3131] px-4 py-3 text-sm font-medium transition hover:bg-white hover:text-black text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-danger dark:border-danger dark:text-onDanger dark:focus-visible:outline-danger">
+        Pay Now
+        </button>
+        <div x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen" x-on:keydown.esc.window="modalIsOpen = false" x-on:click.self="modalIsOpen = false" 
+        class="fixed inset-0 z-30 flex items-end justify-center bg-black/20 p-4 pb-8 backdrop-blur-md sm:items-center lg:p-8" role="dialog" aria-modal="true" aria-labelledby="defaultModalTitle">
+            <!-- Modal Dialog --> 
+            <div x-show="modalIsOpen" x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+             class="flex flex-col gap-4 overflow-hidden rounded-lg bg-[#096B70] text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">                 
+                <!-- Dialog Header -->
+                <div class="flex items-center backdrop-blur-md bg-black/20 justify-between bg-surface-alt/60 p-4 
+                bg-[#1e3850] text-white
+                dark:border-outline-dark dark:bg-surface-dark/20">
+                    <h3 id="defaultModalTitle" class="font-semibold text-center text-white text-on-surface-strong dark:text-on-surface-dark-strong">Fill Your Details</h3>
+                </div>
+                <!-- Dialog Body -->
+                <div class="flex px-4 py-2">
+                  <div class="flex w-full flex-col gap-2 px-4">
+                    <input type="email" class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="First Name"/>
+                    <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Last Name"/>
+                    <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Email"/>
+                    <input type="tel" class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Contact No"/>
+                    <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Address Line 1"/>
+                    <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Address Line 2"/>
+                    <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="City"/>
+                    <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="State"/>
+                    <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Pincode"/>
+                  </div> 
+                    <div class="overflow-hidden max-h-424 w-full text-white overflow-y-auto rounded-md
+                    dark:border-outline-dark">
+                      <table class="w-full  text-sm text-on-surface dark:text-on-surface-dark">
+                          <tbody class="divide-y divide-outline dark:divide-outline-dark">
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left">FEED COW FOR 1 MONTH</td>
+                              <td class="p-2 text-right font-bold">3,300</td>
+                            </tr>
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left">FEED COW FOR 1 WEEK</td>
+                              <td class="p-2 text-right font-bold">750</td>
+                            </tr>
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left">FEED COW FOR 1 MONTH</td>
+                              <td class="p-2 text-right font-bold">3,300</td>
+                            </tr>
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left">FEED COW FOR 1 WEEK</td>
+                              <td class="p-2 text-right font-bold">750</td>
+                            </tr>
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left">FEED COW FOR 1 MONTH</td>
+                              <td class="p-2 text-right font-bold">3,300</td>
+                            </tr>
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left">FEED COW FOR 1 WEEK</td>
+                              <td class="p-2 text-right font-bold">750</td>
+                            </tr>
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left">FEED COW FOR 1 MONTH</td>
+                              <td class="p-2 text-right font-bold">3,300</td>
+                            </tr>
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left">FEED COW FOR 1 WEEK</td>
+                              <td class="p-2 text-right font-bold">750</td>
+                            </tr>
+                            <tr class="even:bg-primary/5 dark:even:bg-primary-dark/10">
+                              <td class="p-2 text-left font-bold">Total</td>
+                              <td class="p-2 text-right font-bold">4,050</td>
+                            </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                  
+                </div>
+                <!-- Dialog Footer -->
+                <div class="flex flex-col-reverse justify-between gap-2 bg-surface-alt/60 p-4 bg-[#1e3850]
+                backdrop-blur-md bg-black/20 
+                dark:border-outline-dark dark:bg-surface-dark/20 sm:flex-row sm:items-center md:justify-end">
+                    <button x-on:click="modalIsOpen = false" type="button" class="text-white rounded-radius px-4 py-2 text-center text-sm font-medium tracking-wide text-on-surface transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:text-on-surface-dark dark:focus-visible:outline-primary-dark">Go Back</button>
+                    <button  x-on:click="modalIsOpen = false" type="button" class="rounded-md bg-[#800020] border-3 border-[#FF3131] px-4 py-3 text-sm font-medium transition hover:bg-white hover:text-black text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-danger dark:border-danger dark:text-onDanger dark:focus-visible:outline-danger">
+                      Pay Now
+                      </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <button class="absolute top-1/2 -translate-y-1/2 right-4 pl-10" aria-label="dismiss banner">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="2.5" class="size-4 shrink-0">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+    </button>
+  
+ 
+  </div>
+
+</div>
+
+       <!-- <div class="flex w-full flex-col gap-2 px-4">
+                        <input type="email" class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="First Name"/>
+                        <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Last Name"/>
+                        <div class="flex">
+                          <input type="checkbox"
+                          x-model="taxBenefit"
+                          class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md"/>
+                          <p class="ml-2">Do you want 80G benefits?</p>
+                        </div>
+                       
+                        <input x-show="taxBenefit" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 transform -translate-y-2"
+                        x-transition:enter-end="opacity-100 transform translate-y-0"
+                        x-transition:leave="transition ease-in duration-200"
+                        x-transition:leave-start="opacity-100 transform translate-y-0"
+                        x-transition:leave-end="opacity-0 transform -translate-y-2"
+                        class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="PAN Card"/>
+                        <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Email"/>
+                        <input type="tel" class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Contact No"/>
+                        <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Address Line 1"/>
+                        <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Address Line 2"/>
+                        <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="City"/>
+                        <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="State"/>
+                        <input class="text-['Trajan_Pro'] text-bold text-md px-4 py-2 bg-white text-black rounded-md" placeholder="Pincode"/>
+                      </div>  -->
+
+
+                      <!-- banner login register -->
+
+                      <div class="flex align-right pr-50">
+                        <p x-text="'₹ '+causeList.reduce((sum, i) => sum + i.amount * i.quantity, 0)"
+                        class="px-6 mt-3 text-lg font-bold"></p>
+                        <div x-data="{modalIsOpen: false}">
+                          <button  x-on:click="modalIsOpen = true" type="button" class="rounded-md bg-[#800020] border-3 border-[#FF3131] px-4 py-3 text-sm font-medium transition hover:bg-white hover:text-black text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-danger dark:border-danger dark:text-onDanger dark:focus-visible:outline-danger">
+                          Review & Pay
+                          </button>
+                          <div x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen" x-on:keydown.esc.window="modalIsOpen = false" x-on:click.self="modalIsOpen = false" 
+                          class="fixed inset-0 z-30 flex items-end justify-center bg-black/20 backdrop-blur-md sm:items-center lg:p-8" role="dialog" aria-modal="true" aria-labelledby="defaultModalTitle">
+                              <!-- Modal Dialog --> 
+                              <div x-show="modalIsOpen" x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                               class="flex flex-col w-full max-w-3xl max-h-[80vh] overflow-hidden rounded-lg bg-white text-black text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark">                 
+                                <!-- Dialog Header -->
+                                <div class="flex items-center justify-between bg-black/80 text-white p-3 dark:border-outline-dark dark:bg-surface-dark/20">
+                                  <h3 id="defaultModalTitle" class="font-semibold tracking-wide text-on-surface-strong dark:text-on-surface-dark-strong">Checkout</h3>
+                                  <button x-on:click="modalIsOpen = false" aria-label="close modal">
+                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                      </svg>
+                                  </button>
+                              </div>   
+                               <!-- Dialog Body -->
+                                  <div class="flex p-4">
+                                    <div x-data="stepperForm()" x-show="!isLoggedIn" class="w-full p-4 text-black rounded-lg space-y-4">
+                                      <div x-show="!showRegistration">
+                                        <h3 class="text-lg text-gray-700 font-semibold mb-2">Login to Continue</h3>
+                                        <div>
+                                          <input
+                                            type="text"
+                                            x-model="loginForm.userid"
+                                            placeholder="Enter your email or phone number"
+                                            :class="[
+                                            'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                            loginErrors.userid
+                                              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                              : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                          ]"
+                                          class="block w-full rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                          />
+                                          <template x-if="loginErrors.userid && !otpFields">
+                                            <p class="mt-1 text-red-600 text-sm" x-text="loginErrors.userid"></p>
+                                          </template>
+                                        </div>
+                                        <input
+                                          x-show="otpFields"
+                                          type="text"
+                                          placeholder="Enter OTP"
+                                          x-model="loginForm.otp"
+                                          :class="[
+                                          'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                          loginErrors.userid
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                        ]"
+                                        class="block w-full rounded border mt-2 text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                        />
+                                        <template x-if="loginErrors.userid && otpFields">
+                                          <p class="text-red-600 text-sm" x-text="loginErrors.userid"></p>
+                                        </template>
+                                        <button
+                                          x-show="otpFields"
+                                          @click="loginWithOtp()"
+                                          class="flex mt-2 w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        >
+                                          Verify
+                                        </button>
+                                        
+                                        <button
+                                          x-show="!otpFields"
+                                          @click="sendOtp()"
+                                          class="flex mt-2 w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        >
+                                        <img class="h-5 w-5" src="https://img.icons8.com/ios/50/sent.png" alt="sent"/>
+                                          Send OTP
+                                        </button>
+                                        <button
+                                        x-show="!otpFields"
+                                        @click="googleSignIn()"
+                                        type="button"
+                                        class="flex mt-2 w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                      >
+                                      <img class="h-5 w-5" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/>
+                                        Sign in with Google
+                                      </button>
+                                        <button
+                                          x-show="!otpFields"
+                                          @click="showRegistration=true"
+                                          class="flex w-full mt-2 items-center justify-center gap-2 text-sm rounded text-gray-700 px-4 py-2 text-center hover:bg-gray-200"
+                                        >
+                                        <img class="h-5 w-5" src="https://img.icons8.com/ios/50/add-user-male.png" alt="add-user-male"/>
+                                          Register here
+                                        </button>
+                                      </div>
+                                      <div x-show="showRegistration">
+                                        <!-- Step Indicators -->
+                                        <div class="flex mb-4">
+                                          <template x-for="(s, index) in steps" :key="index">
+                                            <button
+                                              type="button"
+                                              class="flex-1 text-center py-2"
+                                            >
+                                              <div
+                                                :class="currentStep === index
+                                                  ? 'px-4 py-2  bg-blue-500 text-white rounded-md'
+                                                  : 'text-gray-600 hover:text-gray-800 hover:border-gray-300'"
+                                                class="flex items-center justify-center space-x-1 font-medium"
+                                              >
+                                                <!-- <span x-text="s.icon"></span> -->
+                                                <span x-text="s.label"></span>
+                                              </div>
+                                            </button>
+                                          </template>
+                                        </div>
+                                        <!-- Steps Content -->
+                                        <div>
+                                          <!-- Step 1: Name -->
+                                          <div x-show="currentStep === 0" x-transition>
+                                            <div>
+                                              <input
+                                              type="text"
+                                              x-model="form.firstName"
+                                              placeholder="First name"
+                                              :class="[
+                                              'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                              validationErrors.firstName
+                                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                            ]"
+                                            class="block w-full rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                            />
+                                              <template x-if="validationErrors.firstName">
+                                                <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.firstName"></p>
+                                              </template>
+                                            </div>
+                                            
+                                            <div>
+                                              <input
+                                                type="text"
+                                                x-model="form.lastName"
+                                                placeholder="Last name"
+                                                :class="[
+                                                'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                                validationErrors.lastName
+                                                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                  : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                              ]"
+                                              class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                              />
+                                              <template x-if="validationErrors.lastName">
+                                                <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.lastName"></p>
+                                              </template>
+                                            </div>
+                                            
+                                          </div>
+              
+                                          <!-- Step 2: Contact -->
+                                          <div x-show="currentStep === 1" x-transition>
+                                            <div>
+                                              <input
+                                                type="email"
+                                                placeholder="Email (optional)"
+                                                x-model="form.email"
+                                                :class="[
+                                                'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                                validationErrors.email
+                                                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                  : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                              ]"
+                                              class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                              />
+                                              <template x-if="validationErrors.email">
+                                                <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.email"></p>
+                                              </template>
+                                            </div>
+                                            
+                                            <div>
+                                              <input
+                                                type="tel"
+                                                placeholder="Contact Number"
+                                                x-model="form.contact"
+                                                :class="[
+                                                'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                                validationErrors.contact
+                                                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                  : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                              ]"
+                                              class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                              />
+                                              <template x-if="validationErrors.contact">
+                                                <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.contact"></p>
+                                              </template>
+                                            </div>
+                                            
+                                          </div>
+              
+                                          <!-- Step 3: Tax -->
+                                          <div x-show="currentStep === 2" x-transition>
+                                            <div class="flex items-center mb-2">
+                                              <input
+                                                type="checkbox"
+                                                x-model="form.wantTaxBenefit"
+                                                class="mr-2 h-5 w-5 rounded border-2 border-blue-500 text-blue-600 focus:ring-blue-500"
+                                              >
+                                              <span>Do you want 80G benefits?</span>
+                                            </div>
+                                            <div x-show="form.wantTaxBenefit" x-transition>
+                                              <input
+                                                type="text"
+                                                placeholder="PAN Number"
+                                                x-model="form.pan"
+                                                :class="[
+                                                'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                                validationErrors.pan
+                                                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                  : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                              ]"
+                                              class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                              />
+                                              <template x-if="validationErrors.pan">
+                                                <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.pan"></p>
+                                              </template>
+                                            </div>
+                                            
+                                          </div>
+              
+                                          <!-- Step 4: Address -->
+                                          <div x-show="currentStep === 3" x-transition>
+                                            <div>
+                                              <input
+                                                type="text"
+                                                placeholder="Address Line 1"
+                                                x-model="form.address1"
+                                                :class="[
+                                                'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                                validationErrors.lastName
+                                                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                  : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                              ]"
+                                              class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                              />
+                                              <template x-if="validationErrors.address1">
+                                                <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.address1"></p>
+                                              </template>
+                                            </div>
+                                            
+                                            <div>
+                                              <input
+                                                type="text"
+                                                placeholder="Address Line 2"
+                                                x-model="form.address2"
+                                                class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                              />
+                                            </div>
+                                            
+                                            <div class="grid grid-cols-3 gap-2">
+                                              <div>
+                                                <input
+                                                  type="text"
+                                                  placeholder="City"
+                                                  x-model="form.city"
+                                                  :class="[
+                                                  'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                                  validationErrors.city
+                                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                                ]"
+                                                class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                                />
+                                                <template x-if="validationErrors.city">
+                                                  <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.city"></p>
+                                                </template>
+                                              </div>
+                                            
+                                              <div>
+                                                <input
+                                                  type="text"
+                                                  placeholder="State"
+                                                  x-model="form.state"
+                                                  :class="[
+                                                  'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                                  validationErrors.state
+                                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                                ]"
+                                                class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                                />
+                                                <template x-if="validationErrors.state">
+                                                  <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.state"></p>
+                                                </template>
+                                              </div>
+                                            
+                                              <div>
+                                                <input
+                                                  type="text"
+                                                  placeholder="Pincode"
+                                                  x-model="form.pincode"
+                                                  :class="[
+                                                  'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                                  validationErrors.pincode
+                                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                                ]"
+                                                class="block w-full mt-4 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                                />
+                                                <template x-if="validationErrors.pincode">
+                                                  <p class="text-red-600 mt-1 text-sm" x-text="validationErrors.pincode"></p>
+                                                </template>
+                                              </div>
+                                            </div>
+                                            
+                                          </div>
+              
+                                          <!-- Step 5: Review -->
+                                          <div x-show="currentStep === 4" x-transition>
+                                            <ul class="space-y-1">
+                                              <li>Name:<span x-text="form.firstName + ' ' + form.lastName"></span></li>
+                                              <li>Email: <span x-text="form.email"></span></li>
+                                              <li>Contact: <span x-text="form.contact"></span></li>
+                                              <template x-if="form.wantTaxBenefit">
+                                                <li>PAN:<span x-text="form.pan"></span></li>
+                                              </template>
+                                              <li>Address:
+                                                <span x-text="form.address1 + ', ' + form.address2 + ', ' + form.city + ', ' + form.state + ' - ' + form.pincode"></span>
+                                              </li>
+                                            </ul>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!-- Navigation Buttons -->
+                                      <div class="flex justify-between mt-4">
+                                        <button
+                                          x-show="currentStep > 0 && showRegistration"
+                                          @click="prevStep"
+                                          class="rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                          
+                                        >
+                                          Back
+                                        </button>
+                                        <button
+                                        x-show="showRegistration"
+                                        @click="showRegistration=false"
+                                        class="flex ml-auto items-center justify-center gap-2 text-sm rounded text-gray-700 px-4 py-2 text-center hover:bg-gray-200"
+                                      >
+                                      <img class="h-5 w-5" src="https://img.icons8.com/ios/50/login-rounded-right--v1.png" alt="login-rounded-right--v1"/>
+                                        Login here
+                                      </button>
+                                        <button
+                                          x-show="currentStep < steps.length - 1 && showRegistration"
+                                          @click="nextStep"
+                                          class="flex ml-auto items-center justify-center gap-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        >
+                                          Next
+                                        </button>
+                                        <button
+                                          x-show="currentStep === steps.length - 1 && showRegistration"
+                                          @click="submitForm"
+                                          class="ml-auto rounded border border-gray-300 bg-green-600 px-4 py-2 text-sm text-white font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded hover:bg-green-700"
+                                        >
+                                          Submit
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <div x-show="!showRegistration" class="flex flex-col w-full gap-2 max-h-[50vh] text-gray-700 rounded-md border border-gray-300 overflow-hidden">
+                                      <!-- Scrollable rows -->
+                                      <div class="flex-1 overflow-y-auto">
+                                        <table class="w-full text-sm dark:text-on-surface-dark">
+                                          <tbody class="divide-y divide-outline divide-gray-300 dark:divide-outline-dark">
+                                            <template x-for="item in causeList" :key="item.id">
+                                              <tr>
+                                                <td class="p-2 text-gray-700 font-semibold text-left">
+                                                  <span x-text="item.cause_name"></span>
+                                                </td>
+                                                <td class="p-2">
+                                                  <div class="flex space-x-2 px-1 py-1 items-center">
+                                                    <button
+                                                      @click="decrementDonation(item.id)"
+                                                      type="button"
+                                                      class="text-lg text-gray-700 px-2 py-1 rounded-full"
+                                                    >−</button>
+                                                    <span class="text-lg text-gray-700 font-semibold" x-text="item.quantity"></span>
+                                                    <button
+                                                      @click="addDonation(item.id, item.display_name, item.default_amount)"
+                                                      type="button"
+                                                      class="text-lg text-gray-700 px-2 py-1 rounded-full"
+                                                    >+</button>
+                                                    <button
+                                                      @click="removeDonation(item.id)"
+                                                      type="button"
+                                                      class="bg-gray-200 text-gray-700 px-2 py-1 rounded-lg"
+                                                    >
+                                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V4a1 1 0 011-1h6a1 1 0 011 1v3" />
+                                                      </svg>
+                                                    </button>
+                                                  </div>
+                                                </td>
+                                                <td class="p-2 text-gray-700 text-right font-semibold">
+                                                   <span x-text="(item.amount * item.quantity).toLocaleString()"></span>
+                                                </td>
+                                              </tr>
+                                            </template>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                      <!-- Fixed total row -->
+                                      <div class="bg-gray-200 text-gray-700 border-t border-gray-300 px-4 py-2 flex justify-between font-bold">
+                                        <span>Total</span>
+                                        <span>
+                                          ₹ <span x-text="(causeList.reduce((sum, i) => sum + i.amount * i.quantity, 0)).toLocaleString()"></span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- Dialog Footer -->
+                                  <div x-data="donateNow()" class="flex flex-col-reverse justify-between gap-2 px-4 py-3 bg-black/80
+                                  dark:border-outline-dark dark:bg-surface-dark/20 sm:flex-row sm:items-center md:justify-end">
+                                      <button x-on:click="modalIsOpen = false" type="button" class="text-white rounded-radius px-4 py-2 text-center text-sm font-medium tracking-wide text-on-surface transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:text-on-surface-dark dark:focus-visible:outline-primary-dark">Go Back</button>
+                                      <button x-show="isLoggedIn" x-on:click="payNow()" type="button" class="rounded-md bg-[#800020] border-3 border-[#FF3131] px-2 py-1 text-white text-sm font-medium transition hover:bg-white hover:text-black text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-danger dark:border-danger dark:text-onDanger dark:focus-visible:outline-danger">
+                                        Pay Now
+                                        </button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  
+                        <!-- <button class="absolute top-1/2 -translate-y-1/2 right-4 pl-10" aria-label="dismiss banner">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="2.5" class="size-4 shrink-0">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                      </button> -->
+                    
+                   
+                    </div>
+
+
+                    nextStep() {
+                      this.validationErrors = {}; 
+                    
+                      if (this.currentStep === 0) {
+                        if (!this.form.firstName.trim()) {
+                          this.validationErrors.firstName = "First name is required.";
+                        }
+                        if (!this.form.lastName.trim()) {
+                          this.validationErrors.lastName = "Last name is required.";
+                        }
+                      }
+                    
+                      if (this.currentStep === 1) {
+                        if (this.form.email.trim() != '') {
+                          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email)) {
+                            this.validationErrors.email = "Enter a valid email.";
+                          }
+                        }
+                        if (!this.form.contact.trim()) {
+                          this.validationErrors.contact = "Contact number is required.";
+                        } else if (!/^[0-9]{10}$/.test(this.form.contact)) {
+                          this.validationErrors.contact = "Enter a valid 10-digit number.";
+                        }
+                      }
+                    
+                      if (this.currentStep === 2 && this.form.wantTaxBenefit) {
+                        if (!this.form.pan.trim()) {
+                          this.validationErrors.pan = "PAN number is required.";
+                        }
+                      }
+                    
+                      if (this.currentStep === 3) {
+                        if (!this.form.address1.trim()) {
+                          this.validationErrors.address1 = "Address Line 1 is required.";
+                        }
+                        if (!this.form.city.trim()) {
+                          this.validationErrors.city = "City is required.";
+                        }
+                        if (!this.form.state.trim()) {
+                          this.validationErrors.state = "State is required.";
+                        }
+                        if (!/^\d{6}$/.test(this.form.pincode)) {
+                          this.validationErrors.pincode = "Enter a valid 6-digit pincode.";
+                        }
+                      }
+                    
+                      if (Object.keys(this.validationErrors).length === 0) {
+                        this.currentStep++;
+                      }
+                    },
+                    prevStep() {
+                      if (this.currentStep > 0) {
+                        this.currentStep--;
+                      }
+                    },

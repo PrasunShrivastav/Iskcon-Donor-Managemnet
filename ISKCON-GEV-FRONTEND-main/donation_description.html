@@ -1,0 +1,2443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="firebase.js"></script>
+    <script src="donation_description_script.js"></script>
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.cdnfonts.com/css/trajan-pro" rel="stylesheet" />
+    <link
+      rel="icon"
+      type="image"
+      href="https://iskcongev.com/wp-content/uploads/2022/11/Logo-GEV-07.png"
+    />
+    <title>Donate DESC</title>
+    <script>
+      const colors = [
+        "border-t-red-500",
+        "border-t-yellow-500",
+        "border-t-green-500",
+        "border-t-blue-500",
+      ];
+      let index = 0;
+
+      setInterval(() => {
+        const el = document.getElementById("spinner");
+        el.classList.remove(...colors);
+        el.classList.add(colors[index]);
+        index = (index + 1) % colors.length;
+      }, 500);
+    </script>
+    <style>
+      .font-roboto {
+        font-family: "Roboto", sans-serif;
+      }
+      @media (max-width: 1023px) {
+        #mobileMenu > li[x-data] {
+          margin-bottom: 0.5rem;
+          border-bottom: 0 !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+        }
+        #mobileMenu > li[x-data] > button {
+          width: 100%;
+          border-radius: 1.75rem;
+          background: rgba(255, 255, 255, 0.12);
+          padding: 1.25rem 1.5rem;
+          font-family: "Roboto", sans-serif;
+          font-size: 1.05rem;
+          font-weight: 600;
+          letter-spacing: 0.03em;
+          color: #fff;
+          transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+        }
+        #mobileMenu > li[x-data] > button:hover {
+          background: rgba(255, 255, 255, 0.15);
+          color: #fff;
+        }
+        #mobileMenu > li[x-data] > div {
+          margin-top: 0.5rem;
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- navbar -->
+
+    <div x-data="causes()" x-init="init();">
+      <nav
+        x-data="{ mobileMenuIsOpen: false }"
+        x-on:click.away="mobileMenuIsOpen = false"
+        class="flex min-h-[85px] items-center justify-between border-outline px-4 py-4 sm:px-6 lg:px-10 dark:border-outline-dark bg-[linear-gradient(90deg,_rgba(9,107,112,1)_0%,_rgba(20,57,82,1)_100%)] z-[2] text-white"
+        aria-label="penguin ui menu"
+      >
+        <!-- Brand Logo -->
+        <a href="https://iskcongev.com/" class="">
+          <!-- <span>Peng<span class="text-primary dark:text-primary-dark">ui</span>n</span> -->
+          <img
+            class="size-[60px]"
+            src="https://iskcongev.com/wp-content/uploads/2022/11/Logo-GEV-07.png"
+            alt="ISKCON GEV LOGO"
+          />
+        </a>
+        <!-- Desktop Menu -->
+        <ul class="hidden items-center gap-4 lg:flex">
+          <li class="relative group">
+            <a
+              href="https://iskcongev.com/"
+              class="font-roboto text-sm font-medium tracking-wide hover:text-[#c9a470] dark:text-primary-dark dark:hover:text-primary-dark"
+              >HOME</a
+            >
+            <span
+              class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+            ></span>
+          </li>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false}"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+            'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                ABOUT
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://iskcongev.com/about-iskcon/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >About ISKCON</a
+              >
+              <a
+                href="https://iskcongev.com/about-srila-prabhupada/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >About Srila Prabhupada</a
+              >
+              <a
+                href="https://iskcongev.com/about-radhanath-swami/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >About Radhanath Swami</a
+              >
+              <a
+                href="https://iskcongev.com/our-philosophy/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Our Philosophy</a
+              >
+            </div>
+          </div>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+          'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                TEMPLES
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://iskcongev.com/visit-sri-sri-radha-vrindabanbehari-temple/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Visit Sri Sri Radha Vrindabanbehari Temple</a
+              >
+              <a
+                href="https://iskcongev.com/visit-sri-sri-radha-madanmohan-temple/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Visit Sri Sri Radha Madanmohan Temple</a
+              >
+            </div>
+          </div>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+        'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                VRINDAVAN FOREST
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://iskcongev.com/vf/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Holy Places</a
+              >
+              <a
+                href="https://iskcongev.com/vrindvan-forest/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >The Forest</a
+              >
+              <a
+                href="https://iskcongev.com/govardhan-hill/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Govardhan Hill</a
+              >
+              <a
+                href="https://iskcongev.com/srila-prabhupada-room/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Srila Prabhupada Room</a
+              >
+              <a
+                href="https://iskcongev.com/rupa-goswami-samadhi/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Rupa Goswami Samadhi</a
+              >
+              <a
+                href="https://iskcongev.com/sanatana-goswami-samadhi/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Sanatan Goswami Samadhi</a
+              >
+              <a
+                href="https://iskcongev.com/25-lilasthalis/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >25 Lilasthalis</a
+              >
+              <a
+                href="https://iskcongev.com/festivals-at-govardhan-ecovillage/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Festivals At Govardhan Ecovillage</a
+              >
+            </div>
+          </div>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+        'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                SOCIAL INITIATIVES
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://govardhanannakshetra.com/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Annaksheta</a
+              >
+              <a
+                href="https://www.grd.org.in/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Govardhan Rural Development</a
+              >
+              <a
+                href="https://www.ecovillage.org.in/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >ISKCON Govardhan Ashram</a
+              >
+            </div>
+          </div>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+        'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                GOSHALA
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://iskcongev.com/about-goshala/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >About Goshala</a
+              >
+              <a
+                href="https://iskcongev.com/cow-products/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Cow Products</a
+              >
+            </div>
+          </div>
+
+          <li class="relative group">
+            <a
+              href="https://www.ecovillage.org.in/contact"
+              class="font-roboto text-sm font-medium tracking-wide hover:text-[#c9a470] dark:text-primary-dark dark:hover:text-primary-dark"
+              >CONTACT US</a
+            >
+            <span
+              class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+            ></span>
+          </li>
+          <li class="relative group">
+            <a
+              href="https://iskcongev.com/one-day-tour/"
+              class="font-roboto text-sm font-medium tracking-wide hover:text-[#c9a470] dark:text-primary-dark dark:hover:text-primary-dark"
+              >VISIT ISKCON GEV</a
+            >
+            <span
+              class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+            ></span>
+          </li>
+          <li class="relative group">
+            <a
+              href="https://iskcongev.com/volunteer/"
+              class="font-roboto text-sm font-medium tracking-wide hover:text-[#c9a470] dark:text-primary-dark dark:hover:text-primary-dark"
+              >VOLUNTEER</a
+            >
+            <span
+              class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+            ></span>
+          </li>
+
+          <li x-show="!isLoggedIn">
+            <button
+              x-on:click="document.querySelector('[data-open-checkout-modal]')?.click()"
+              type="button"
+              class="flex items-center justify-center rounded-full border border-white/30 px-4 py-2 font-roboto text-sm font-semibold tracking-wide text-white transition hover:bg-white hover:text-[#0f6670]"
+            >
+              LOGIN
+            </button>
+          </li>
+
+          <div
+            x-show="isLoggedIn"
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+        'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                <img
+                  class="w-10 h-10 rounded-full"
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  alt="ISKCON GEV LOGO"
+                />
+
+                <!-- <svg class="w-2 h-2 m-2 text-white" fill="currentColor" width="8" height="8" viewBox="0 0 15 15" aria-label="Menu dropdown icon"><path d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"></path></svg>     -->
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-15 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div x-show="isLoggedIn">
+              <div
+                x-cloak
+                x-show="isOpen || openedWithKeyboard"
+                x-transition
+                x-trap="openedWithKeyboard"
+                x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+                x-on:keydown.down.prevent="$focus.wrap().next()"
+                x-on:keydown.up.prevent="$focus.wrap().previous()"
+                x-transition
+                class="bg-white absolute top-16 left-1/2 -translate-x-1/2 flex w-fit min-w-30 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+                role="menu"
+              >
+                <a
+                  href="/donor_profile.html"
+                  class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                  role="menuitem"
+                  >My Profile</a
+                >
+                <a
+                  href="#"
+                  @click="signOut()"
+                  class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                  role="menuitem"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </ul>
+        <!-- Mobile Menu Button -->
+        <button
+          x-on:click="mobileMenuIsOpen = !mobileMenuIsOpen"
+          x-bind:aria-expanded="mobileMenuIsOpen"
+          type="button"
+          class="flex items-center justify-center rounded-full border border-white/30 bg-white/10 p-2 text-on-surface shadow-sm backdrop-blur-sm transition hover:bg-white/20 dark:text-on-surface-dark lg:hidden"
+          aria-label="mobile menu"
+          aria-controls="mobileMenu"
+        >
+          <svg
+            x-cloak
+            x-show="!mobileMenuIsOpen"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+          <svg
+            x-cloak
+            x-show="mobileMenuIsOpen"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <!-- Mobile Menu -->
+        <ul
+          x-cloak
+          x-show="mobileMenuIsOpen"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="-translate-y-full opacity-0"
+          x-transition:enter-end="translate-y-0 opacity-100"
+          x-transition:leave="transition ease-in duration-200"
+          x-transition:leave-start="translate-y-0 opacity-100"
+          x-transition:leave-end="-translate-y-full opacity-0"
+          id="mobileMenu"
+          class="fixed inset-0 z-40 h-screen overflow-y-auto bg-gradient-to-b from-[#1d3237] via-[#21484d] to-[#2a666d] px-4 pb-10 pt-0 text-sm text-white shadow-2xl lg:hidden sm:px-6"
+        >
+          <div
+            class="sticky top-0 z-10 -mx-4 mb-6 flex items-center justify-between border-b border-white/10 bg-[linear-gradient(90deg,_rgba(9,107,112,1)_0%,_rgba(20,57,82,1)_100%)] px-4 backdrop-blur min-h-[85px] sm:-mx-6 sm:px-6"
+          >
+            <img
+              class="size-[60px]"
+              src="https://iskcongev.com/wp-content/uploads/2022/11/Logo-GEV-07.png"
+              alt="ISKCON GEV LOGO"
+            />
+            <button
+              x-on:click="mobileMenuIsOpen = false"
+              type="button"
+              class="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/10"
+              aria-label="Close mobile menu"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <li x-show="!isLoggedIn" class="mb-2">
+            <button
+              x-on:click="mobileMenuIsOpen = false; document.querySelector('[data-open-checkout-modal]')?.click()"
+              type="button"
+              class="block w-full rounded-[1.75rem] bg-white/12 px-6 py-5 text-center font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+            >
+              LOGIN
+            </button>
+          </li>
+
+          <li x-show="isLoggedIn" class="mb-4 rounded-[1.5rem] bg-white/10 p-2">
+            <a
+              href="/donor_profile.html"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.1rem] px-4 py-3 font-roboto text-base font-semibold tracking-wide text-white transition hover:bg-white/10"
+              >MY PROFILE</a
+            >
+            <button
+              @click="signOut(); mobileMenuIsOpen = false"
+              type="button"
+              class="block w-full rounded-[1.1rem] px-4 py-3 text-left font-roboto text-base font-semibold tracking-wide text-white transition hover:bg-white/10"
+            >
+              LOGOUT
+            </button>
+          </li>
+
+          <li class="my-2">
+            <a
+              href="https://iskcongev.com/"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >HOME</a
+            >
+          </li>
+
+          <li x-data="{ isOpen: false }" class="border-b border-white/5 py-1">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              ABOUT
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://iskcongev.com/about-iskcon/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >About ISKCON</a
+              >
+              <a
+                href="https://iskcongev.com/about-srila-prabhupada/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >About Srila Prabhupada</a
+              >
+              <a
+                href="https://iskcongev.com/about-radhanath-swami/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >About Radhanath Swami</a
+              >
+              <a
+                href="https://iskcongev.com/our-philosophy/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Our Philosophy</a
+              >
+            </div>
+          </li>
+
+          <li x-data="{ isOpen: false }" class="border-b border-white/5 py-1">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              TEMPLES
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://iskcongev.com/visit-sri-sri-radha-vrindabanbehari-temple/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Visit Sri Sri Radha Vrindabanbehari Temple</a
+              >
+              <a
+                href="https://iskcongev.com/visit-sri-sri-radha-madanmohan-temple/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Visit Sri Sri Radha Madanmohan Temple</a
+              >
+            </div>
+          </li>
+
+          <li x-data="{ isOpen: false }" class="border-b border-white/5 py-1">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              VRINDAVAN FOREST
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://iskcongev.com/vf/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Holy Places</a
+              >
+              <a
+                href="https://iskcongev.com/vrindvan-forest/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >The Forest</a
+              >
+              <a
+                href="https://iskcongev.com/govardhan-hill/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Govardhan Hill</a
+              >
+              <a
+                href="https://iskcongev.com/srila-prabhupada-room/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Srila Prabhupada Room</a
+              >
+              <a
+                href="https://iskcongev.com/rupa-goswami-samadhi/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Rupa Goswami Samadhi</a
+              >
+              <a
+                href="https://iskcongev.com/sanatana-goswami-samadhi/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Sanatan Goswami Samadhi</a
+              >
+              <a
+                href="https://iskcongev.com/25-lilasthalis/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >25 Lilasthalis</a
+              >
+              <a
+                href="https://iskcongev.com/festivals-at-govardhan-ecovillage/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Festivals At Govardhan Ecovillage</a
+              >
+            </div>
+          </li>
+
+          <li x-data="{ isOpen: false }" class="border-b border-white/5 py-1">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              SOCIAL INITIATIVES
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://govardhanannakshetra.com/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Annaksheta</a
+              >
+              <a
+                href="https://www.grd.org.in/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Govardhan Rural Development</a
+              >
+              <a
+                href="https://www.ecovillage.org.in/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >ISKCON Govardhan Ashram</a
+              >
+            </div>
+          </li>
+
+          <li
+            x-data="{ isOpen: false }"
+            class="mb-4 border-b border-white/5 py-1"
+          >
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              GOSHALA
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://iskcongev.com/about-goshala/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >About Goshala</a
+              >
+              <a
+                href="https://iskcongev.com/cow-products/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Cow Products</a
+              >
+            </div>
+          </li>
+
+          <li class="mb-2">
+            <a
+              href="https://iskcongev.com/cow-products/"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >CONTACT US</a
+            >
+          </li>
+          <li class="mb-2">
+            <a
+              href="https://iskcongev.com/one-day-tour/"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >VISIT ISKCON GEV</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://iskcongev.com/volunteer/"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >VOLUNTEER</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- navbar ends -->
+
+      <!-- donation description -->
+
+      <section class="bg-transparent bg-gradient-to-b from-[#096B70] to-white">
+        <section
+          class="mx-auto mb-4 w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8"
+        >
+          <template x-if="loadingCategory">
+            <div class="space-y-4 animate-pulse">
+              <div class="h-8 w-1/3 bg-gray-300 rounded"></div>
+              <div class="h-4 w-2/3 bg-gray-200 rounded"></div>
+              <div class="h-4 w-1/2 bg-gray-200 rounded"></div>
+            </div>
+          </template>
+          <template x-for="category in categories" :key="category.id">
+            <div class="mb-6">
+              <h2
+                x-text="category.name"
+                class="font-['Trajan_Pro'] text-2xl font-thin leading-[1.4] tracking-wide text-white antialiased sm:text-3xl"
+              ></h2>
+              <p
+                x-text="category.description"
+                class="text-left text-base font-medium font-[Roboto] tracking-wide text-gray-700 sm:text-lg"
+              ></p>
+            </div>
+          </template>
+        </section>
+      </section>
+
+      <!-- breadcrumb -->
+
+      <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <nav
+          class="text-sm font-medium text-on-surface dark:text-on-surface-dark"
+          aria-label="breadcrumb"
+        >
+          <ol class="flex flex-wrap items-center gap-1">
+            <li class="flex items-center gap-1">
+              <a
+                href="#"
+                class="hover:text-on-surface-strong dark:hover:text-on-surface-dark-strong"
+                >Donate</a
+              >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </li>
+            <li class="flex items-center gap-1">
+              <a
+                x-show="!loadingCategory && categories.length"
+                x-text="categories[0].name"
+                x-text="category.name"
+                href="/donation_landingpage.html"
+                class="hover:text-on-surface-strong dark:hover:text-on-surface-dark-strong"
+              ></a>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </li>
+            <li
+              x-text="subCategory"
+              class="flex items-center text-on-surface-strong gap-1 font-bold dark:text-on-surface-dark-strong"
+              aria-current="page"
+            ></li>
+          </ol>
+        </nav>
+      </div>
+
+      <!-- sub causes cards -->
+
+      <div class="mx-auto w-full max-w-7xl px-4 py-4 pb-28 sm:px-6 lg:px-8">
+        <div class="pb-8">
+          <template x-if="loadingCauses">
+            <div
+              class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
+            >
+              <!-- Skeleton Card -->
+              <template x-for="i in 4" :key="i">
+                <div class="card animate-pulse">
+                  <article
+                    class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border border-gray-200"
+                  >
+                    <!-- Image Placeholder -->
+                    <div class="aspect-[4/3] bg-gray-300"></div>
+                    <!-- Body -->
+                    <div class="flex flex-col gap-4 p-6">
+                      <div class="h-4 w-3/4 bg-gray-300 rounded"></div>
+                      <div
+                        class="flex flex-col gap-2 rounded-lg bg-white p-2 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div class="h-4 w-12 bg-gray-300 rounded"></div>
+                        <div class="h-8 w-20 bg-gray-300 rounded"></div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </template>
+            </div>
+          </template>
+
+          <div
+            x-show="!loadingCauses"
+            class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
+          >
+            <template x-for="cause in causes" :key="cause.id">
+              <div class="card">
+                <article
+                  class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark"
+                >
+                  <div class="overflow-hidden">
+                    <img
+                      :src="cause.image_url ? hostAddress+cause.image_url : 'https://iskcongev.com/wp-content/uploads/2022/01/Diety-Radha-vrindaban-behari.jpg'"
+                      class="aspect-[4/3] w-full object-cover transition duration-700 ease-out group-hover:scale-105"
+                      :alt="cause.display_name"
+                    />
+                  </div>
+                  <div class="flex flex-col gap-4 p-6">
+                    <h3
+                      x-text="cause.display_name"
+                      class="font-roboto text-base text-center font-bold leading-snug text-on-surface-strong break-words dark:text-on-surface-dark-strong sm:text-lg"
+                      aria-describedby="tripDescription"
+                    ></h3>
+                    <div
+                      class="flex flex-col gap-2 rounded-lg bg-white p-2 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <p
+                        x-text="'₹ '+(cause.default_amount).toLocaleString()"
+                        class="text-['Trajan_Pro'] px-2 py-1 text-center text-base font-bold sm:text-left"
+                      ></p>
+                      <div
+                        x-show="!isInCart(cause.id)"
+                        class="w-full sm:w-auto"
+                      >
+                        <button
+                          x-on:click="addDonation(cause.id,cause.display_name,cause.default_amount, cause.categoryName)"
+                          type="button"
+                          class="w-full rounded-lg bg-[#FDDA0D] border-3 border-[#FAFA33] px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark sm:w-auto rounded-radius"
+                        >
+                          Add Donation
+                        </button>
+                      </div>
+                      <div
+                        x-show="isInCart(cause.id)"
+                        class="flex items-center justify-center gap-2 px-1 py-1 sm:justify-end"
+                      >
+                        <button
+                          @click="decrementDonation(cause.id)"
+                          type="button"
+                          class="rounded-lg border-2 border-red-500 bg-red-400 px-2 py-1 text-lg font-bold text-white"
+                        >
+                          -
+                        </button>
+                        <template x-if="causeList.find(i => i.id === cause.id)">
+                          <span
+                            class="text-lg font-bold"
+                            x-text="causeList.find(i => i.id === cause.id).quantity"
+                          ></span>
+                        </template>
+                        <button
+                          @click="addDonation(cause.id, cause.display_name, cause.default_amount, cause.categoryName)"
+                          type="button"
+                          class="rounded-lg border-2 border-green-500 bg-green-400 px-2 py-1 text-lg font-bold text-white"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="mx-auto mt-10 w-full max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="card">
+              <article
+                class="group mx-auto grid w-full max-w-2xl grid-cols-1 overflow-hidden rounded-xl bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark md:grid-cols-8"
+              >
+                <div class="col-span-3 overflow-hidden">
+                  <img
+                    src="https://cdn.prod.website-files.com/6215e78bf3c2b34d07885b50/64c0aba9192671c5477437d0_CaseStudy_Hero_Banners_GEV.jpg"
+                    class="h-52 md:h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105"
+                    alt="a men wearing VR goggles"
+                  />
+                </div>
+                <div class="flex flex-col justify-center p-6 col-span-5">
+                  <h3
+                    class="font-roboto text-md px-4 py-2 text-center font-bold text-on-surface-strong dark:text-on-surface-dark-strong"
+                    aria-describedby="tripDescription"
+                  >
+                    ENTER ANY AMOUNT YOU WISH
+                  </h3>
+                  <div
+                    class="flex flex-col gap-2 rounded-lg bg-white p-2 sm:flex-row sm:items-stretch"
+                  >
+                    <span
+                      class="flex items-center justify-center rounded-lg px-3 py-2 text-lg font-bold mx-auto sm:rounded-l-none sm:rounded-r-none sm:justify-start"
+                    >
+                      ₹
+                      <input
+                        class="w-full min-w-0 px-2 py-2 text-md font-bold text-center sm:text-left"
+                        value="750"
+                      />
+                    </span>
+                    <button
+                      x-on:click="modalIsOpen = true"
+                      type="button"
+                      class="w-full rounded-lg bg-[#FAA0A0] border-3 border-[#C41E3A] px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark sm:w-auto rounded-radius"
+                    >
+                      Add Donation
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="card">
+              <article
+                class="group mx-auto grid w-full max-w-2xl grid-cols-1 overflow-hidden rounded-xl bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark md:grid-cols-8"
+              >
+                <div class="col-span-3 overflow-hidden">
+                  <img
+                    src="https://www.presentations.gov.in/wp-content/uploads/2020/06/Preview.png"
+                    class="h-52 md:h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105"
+                    alt="a men wearing VR goggles"
+                  />
+                </div>
+                <div class="flex flex-col justify-center p-6 col-span-5">
+                  <h3
+                    class="font-roboto text-md px-4 py-2 text-center font-bold text-on-surface-strong dark:text-on-surface-dark-strong"
+                    aria-describedby="tripDescription"
+                  >
+                    DONATE THROUGH UPI
+                  </h3>
+                  <div
+                    class="text-center justify-between bg-white border rounded-lg"
+                  >
+                    <p
+                      class="text-['Trajan_Pro'] text-bold border-b text-md px-4 py-2"
+                    >
+                      Google Pay
+                    </p>
+                    <p
+                      class="text-['Trajan_Pro'] text-bold border-b text-md px-4 py-2"
+                    >
+                      Phone Pe
+                    </p>
+                    <p class="text-['Trajan_Pro'] text-bold text-md px-4 py-2">
+                      Bhim UPI
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- banner for payment -->
+
+      <div
+        x-cloak
+        x-show="causeList.length > 0"
+        class="fixed inset-x-0 bottom-0 z-[2] border-b bg-[linear-gradient(90deg,_rgba(9,107,112,1)_0%,_rgba(20,57,82,1)_100%)] text-white shadow-lg dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark"
+      >
+        <div
+          class="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8"
+        >
+          <div class="min-w-0">
+            <p class="text-sm text-pretty sm:text-base">Donations</p>
+            <p class="text-base font-bold hover:underline sm:text-lg">
+              <template x-if="causeList.length === 1">
+                <span>
+                  <span x-text="causeList[0].cause_name"></span>
+                  <span x-text="' x' + causeList[0].quantity"></span>
+                </span>
+              </template>
+
+              <template x-if="causeList.length > 1">
+                <span>
+                  <span x-text="causeList[0].cause_name"></span>
+                  &amp; more
+                </span>
+              </template>
+            </p>
+          </div>
+
+          <div
+            class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:justify-end"
+          >
+            <p
+              x-text="'₹ '+(causeList.reduce((sum, i) => sum + i.amount * i.quantity, 0)).toLocaleString()"
+              class="text-lg font-bold"
+            ></p>
+            <div x-data="{modalIsOpen: false}">
+              <button
+                x-on:click="modalIsOpen = true"
+                data-open-checkout-modal
+                type="button"
+                class="w-full rounded-md bg-[#800020] border-3 border-[#FF3131] px-4 py-3 text-center text-sm font-medium transition hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger active:opacity-100 active:outline-offset-0 disabled:cursor-not-allowed disabled:opacity-75 dark:bg-danger dark:border-danger dark:text-onDanger dark:focus-visible:outline-danger sm:w-auto"
+              >
+                Review & Pay
+              </button>
+              <div
+                x-cloak
+                x-show="modalIsOpen"
+                x-transition.opacity.duration.200ms
+                x-trap.inert.noscroll="modalIsOpen"
+                x-on:keydown.esc.window="modalIsOpen = false"
+                x-on:click.self="modalIsOpen = false"
+                class="fixed inset-0 z-30 flex items-end justify-center bg-black/20 p-2 backdrop-blur-md sm:items-center sm:p-4 lg:p-8"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="defaultModalTitle"
+              >
+                <!-- Modal Dialog -->
+                <div
+                  x-show="modalIsOpen"
+                  x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
+                  x-transition:enter-start="opacity-0"
+                  x-transition:enter-end="opacity-100"
+                  class="flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-lg bg-white text-black text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark sm:max-h-[80vh]"
+                >
+                  <!-- Dialog Header -->
+                  <!-- <div class="flex items-center justify-between bg-black/80 text-white dark:border-outline-dark dark:bg-surface-dark/20">
+                    <h3 id="defaultModalTitle" class="font-semibold tracking-wide px-4 py-2 text-on-surface-strong dark:text-on-surface-dark-strong">Checkout</h3>
+                    <button x-on:click="modalIsOpen = false" class="px-2 py-4" aria-label="close modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>    -->
+                  <!-- Dialog Body -->
+                  <div class="flex flex-col gap-4 p-3 sm:p-4 lg:flex-row">
+                    <div
+                      x-data="stepperForm()"
+                      x-show="!isLoggedIn"
+                      class="w-full rounded-lg p-3 text-black space-y-4 sm:p-4"
+                    >
+                      <div
+                        x-show="!showRegistration"
+                        x-transition:enter="transition-opacity duration-300"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition-opacity duration-200"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        x-cloak
+                      >
+                        <div class="flex space-x-2 items-center mb-2">
+                          <img
+                            class="h-5 w-5"
+                            src="https://img.icons8.com/ios/50/login-rounded-right--v1.png"
+                            alt="login-rounded-right--v1"
+                          />
+                          <h3 class="text-lg text-gray-700 font-semibold">
+                            Login to Continue
+                          </h3>
+                        </div>
+                        <div>
+                          <input
+                            type="text"
+                            x-model="loginForm.userid"
+                            placeholder="Enter your email or phone number"
+                            :class="[
+                              'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                              loginErrors.userid
+                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                            ]"
+                            class="block w-full rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                            x-bind:disabled="inputDisabled"
+                          />
+                          <template x-if="loginErrors.userid && !otpFields">
+                            <p
+                              class="mt-1 text-red-600 text-sm"
+                              x-text="loginErrors.userid"
+                            ></p>
+                          </template>
+                        </div>
+                        <input
+                          x-show="otpFields"
+                          type="text"
+                          placeholder="Enter OTP"
+                          x-model="loginForm.otp"
+                          :class="[
+                            'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                            loginErrors.userid
+                              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                              : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                          ]"
+                          class="block w-full rounded border mt-2 text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                        />
+                        <template x-if="loginErrors.userid && otpFields">
+                          <p
+                            class="text-red-600 text-sm"
+                            x-text="loginErrors.userid"
+                          ></p>
+                        </template>
+                        <button
+                          x-show="otpFields"
+                          @click="loginWithOtp()"
+                          class="flex mt-2 w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <img
+                            class="h-5 w-5"
+                            src="https://img.icons8.com/ios/50/checked--v1.png"
+                            alt="approval--v1"
+                          />
+                          Verify
+                        </button>
+
+                        <button
+                          x-show="!otpFields"
+                          @click="sendOtp()"
+                          class="flex mt-2 w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <img
+                            class="h-5 w-5"
+                            src="https://img.icons8.com/ios/50/sent.png"
+                            alt="sent"
+                          />
+                          Send OTP
+                        </button>
+                        <button
+                          x-show="!otpFields"
+                          @click="handleGoogleSignIn()"
+                          :disabled="googleLoading"
+                          type="button"
+                          class="flex mt-2 w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <img
+                            class="h-5 w-5"
+                            src="https://img.icons8.com/color/48/google-logo.png"
+                            alt="google-logo"
+                          />
+                          <span
+                            x-show="googleLoading"
+                            id="spinner"
+                            class="inline-block w-5 h-5 border-4 border-gray-300 rounded-full animate-spin border-t-blue-500"
+                          ></span>
+                          <span
+                            x-text="googleLoading ? 'Signing in...' : 'Sign in with Google'"
+                          ></span>
+                        </button>
+                        <p
+                          x-show="googleErrorMessage"
+                          x-text="googleErrorMessage"
+                          class="text-red-600 p-2"
+                        ></p>
+                        <button
+                          x-show="!otpFields"
+                          @click="showRegistration=true"
+                          class="flex w-full mt-2 items-center justify-center gap-2 text-sm rounded text-gray-700 px-4 py-2 text-center hover:bg-gray-200"
+                        >
+                          <img
+                            class="h-5 w-5"
+                            src="https://img.icons8.com/ios/50/add-user-male.png"
+                            alt="add-user-male"
+                          />
+                          Register here
+                        </button>
+                      </div>
+
+                      <!-- MESSAGE NOTIFICATION -->
+                      <div
+                        x-show="loginSubmitted"
+                        x-data="{
+                             notifications: [],
+                             displayDuration: 8000,
+                             soundEffect: true,
+                             addNotification({ variant = 'info', sender = null, title = null, message = null}) {
+                                 const id = Date.now()
+                                 const notification = { id, variant, sender, title, message }
+                     
+                                 // Keep only the most recent 20 notifications
+                                 if (this.notifications.length >= 20) {
+                                     this.notifications.splice(0, this.notifications.length - 19)
+                                 }
+                     
+                                 // Add the new notification to the notifications stack
+                                 this.notifications.push(notification)
+                     
+                                 if (this.soundEffect) {
+                                     // Play the notification sound
+                                     const notificationSound = new Audio('https://res.cloudinary.com/ds8pgw1pf/video/upload/v1728571480/penguinui/component-assets/sounds/ding.mp3')
+                                     notificationSound.play().catch((error) => {
+                                         console.error('Error playing the sound:', error)
+                                     })
+                                 }
+                             },
+                             removeNotification(id) {
+                                 setTimeout(() => {
+                                     loginSubmitted = false;
+                                     this.notifications = this.notifications.filter(
+                                         (notification) => notification.id !== id,
+                                     )
+                                 }, 400);
+                             },
+                         }"
+                        x-on:notify.window="addNotification({
+                                 variant: $event.detail.variant,
+                                 sender: $event.detail.sender,
+                                 title: $event.detail.title,
+                                 message: $event.detail.message,
+                             })"
+                      >
+                        <div
+                          x-on:mouseenter="$dispatch('pause-auto-dismiss')"
+                          x-on:mouseleave="$dispatch('resume-auto-dismiss')"
+                          class="group pointer-events-none rounded-lg fixed inset-x-8 top-0 z-99 flex max-w-full flex-col gap-2 bg-transparent px-6 py-6 md:bottom-0 md:left-[unset] md:right-0 md:top-[unset] md:max-w-sm"
+                        >
+                          <template
+                            x-for="(notification, index) in notifications"
+                            x-bind:key="notification.id"
+                          >
+                            <!-- root div holds all of the notifications  -->
+                            <div>
+                              <!-- Success Notification  -->
+                              <template
+                                x-if="notification.variant === 'success'"
+                              >
+                                <div
+                                  x-data="{ isVisible: false, timeout: null }"
+                                  x-cloak
+                                  x-show="isVisible"
+                                  class="pointer-events-auto relative rounded-lg border border-success bg-surface text-on-surface dark:bg-surface-dark dark:text-on-surface-dark"
+                                  role="alert"
+                                  x-on:pause-auto-dismiss.window="clearTimeout(timeout)"
+                                  x-on:resume-auto-dismiss.window=" timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)"
+                                  x-init="$nextTick(() => { isVisible = true }), (timeout = setTimeout(() => { isVisible = false, removeNotification(notification.id)}, displayDuration))"
+                                  x-transition:enter="transition duration-300 ease-out"
+                                  x-transition:enter-end="translate-y-0"
+                                  x-transition:enter-start="translate-y-8"
+                                  x-transition:leave="transition duration-300 ease-in"
+                                  x-transition:leave-end="-translate-x-24 opacity-0 md:translate-x-24"
+                                  x-transition:leave-start="translate-x-0 opacity-100"
+                                >
+                                  <div
+                                    class="flex w-full items-center gap-2.5 text-white bg-black/60 border-2 border-green-500 rounded-lg p-4 transition-all duration-300"
+                                  >
+                                    <!-- Icon -->
+                                    <div
+                                      class="rounded-full bg-success/15 p-0.5 text-green-600"
+                                      aria-hidden="true"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        class="size-5"
+                                        aria-hidden="true"
+                                      >
+                                        <path
+                                          fill-rule="evenodd"
+                                          d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                                          clip-rule="evenodd"
+                                        />
+                                      </svg>
+                                    </div>
+
+                                    <!-- Title & Message -->
+                                    <div class="flex flex-col gap-2">
+                                      <h3
+                                        x-cloak
+                                        x-show="notification.title"
+                                        class="text-sm font-semibold text-green-600"
+                                        x-text="notification.title"
+                                      ></h3>
+                                      <p
+                                        x-cloak
+                                        x-show="notification.message"
+                                        class="text-pretty text-sm"
+                                        x-text="notification.message"
+                                      ></p>
+                                    </div>
+
+                                    <!--Dismiss Button -->
+                                    <button
+                                      type="button"
+                                      class="ml-auto"
+                                      aria-label="dismiss notification"
+                                      x-on:click="(isVisible = false), removeNotification(notification.id)"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg viewBox="
+                                        0
+                                        0
+                                        24
+                                        24
+                                        stroke="currentColor"
+                                        fill="none"
+                                        stroke-width="2"
+                                        class="size-5 shrink-0"
+                                        aria-hidden="true"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M6 18L18 6M6 6l12 12"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </template>
+                            </div>
+                          </template>
+                        </div>
+                      </div>
+                      <div
+                        x-show="showRegistration"
+                        x-transition:enter="transition-opacity duration-300"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition-opacity duration-200"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        x-cloak
+                      >
+                        <div>
+                          <div class="flex space-x-2 items-center mb-2">
+                            <img
+                              class="h-5 w-5"
+                              src="https://img.icons8.com/ios/50/add-user-male.png"
+                              alt="add-user-male"
+                            />
+                            <h3 class="text-lg text-gray-700 font-semibold">
+                              Register to Continue
+                            </h3>
+                          </div>
+
+                          <form
+                            x-ref="registrationForm"
+                            @submit.prevent="submitForm()"
+                          >
+                            <div>
+                              <input
+                                type="text"
+                                x-model="form.firstName"
+                                placeholder="First Name"
+                                :class="[
+                                'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                validationErrors.firstName
+                                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                  : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                              ]"
+                                class="block w-full rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                required
+                              />
+                            </div>
+
+                            <div>
+                              <input
+                                type="text"
+                                x-model="form.lastName"
+                                placeholder="Last Name"
+                                :class="[
+                                  'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                  validationErrors.lastName
+                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                ]"
+                                class="block w-full mt-2 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                required
+                              />
+                            </div>
+
+                            <!-- Step 2: Contact -->
+                            <div>
+                              <input
+                                type="email"
+                                placeholder="Email (optional)"
+                                x-model="form.email"
+                                :class="[
+                                  'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                  validationErrors.email
+                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                ]"
+                                class="block w-full mt-2 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                              />
+                            </div>
+
+                            <div>
+                              <input
+                                type="tel"
+                                placeholder="Contact Number"
+                                x-model="form.contact"
+                                :class="[
+                                  'block w-full rounded border px-4 py-2 shadow-sm focus:ring-1 sm:text-sm',
+                                  validationErrors.contact
+                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                ]"
+                                class="block w-full mt-2 rounded border text-black border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                pattern="^\d{10}$"
+                                inputmode="numeric"
+                                title="Enter a valid 10-digit number"
+                                required
+                              />
+                            </div>
+                            <!-- Navigation Buttons -->
+                            <div class="flex justify-between mt-4">
+                              <button
+                                x-show="showRegistration"
+                                @click="showRegistration=false"
+                                class="flex items-center justify-center gap-2 text-sm rounded text-gray-700 px-4 py-2 text-center hover:bg-gray-200"
+                              >
+                                <img
+                                  class="h-5 w-5"
+                                  src="https://img.icons8.com/ios/50/login-rounded-right--v1.png"
+                                  alt="login-rounded-right--v1"
+                                />
+                                Back to Login
+                              </button>
+                              <button
+                                x-show="showRegistration"
+                                type="submit"
+                                class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-green-600 hover:rounded-md hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:rounded-md"
+                              >
+                                <img
+                                  class="h-5 w-5"
+                                  src="https://img.icons8.com/ios/50/submit-for-approval.png"
+                                  alt="submit-for-approval"
+                                />
+                                Submit
+                              </button>
+                            </div>
+                          </form>
+                          <!-- MESSAGE NOTIFICATION -->
+                          <div
+                            x-show="registrationSubmitted"
+                            x-data="{
+                            notifications: [],
+                            displayDuration: 8000,
+                            soundEffect: true,
+                            addNotification({ variant = 'info', sender = null, title = null, message = null}) {
+                                const id = Date.now()
+                                const notification = { id, variant, sender, title, message }
+                    
+                                // Keep only the most recent 20 notifications
+                                if (this.notifications.length >= 20) {
+                                    this.notifications.splice(0, this.notifications.length - 19)
+                                }
+                    
+                                // Add the new notification to the notifications stack
+                                this.notifications.push(notification)
+                    
+                                if (this.soundEffect) {
+                                    // Play the notification sound
+                                    const notificationSound = new Audio('https://res.cloudinary.com/ds8pgw1pf/video/upload/v1728571480/penguinui/component-assets/sounds/ding.mp3')
+                                    notificationSound.play().catch((error) => {
+                                        console.error('Error playing the sound:', error)
+                                    })
+                                }
+                            },
+                            removeNotification(id) {
+                                setTimeout(() => {
+                                    registrationSubmitted = false;
+                                    this.notifications = this.notifications.filter(
+                                        (notification) => notification.id !== id,
+                                    )
+                                }, 400);
+                            },
+                        }"
+                            x-on:notify.window="addNotification({
+                                variant: $event.detail.variant,
+                                sender: $event.detail.sender,
+                                title: $event.detail.title,
+                                message: $event.detail.message,
+                            })"
+                          >
+                            <div
+                              x-on:mouseenter="$dispatch('pause-auto-dismiss')"
+                              x-on:mouseleave="$dispatch('resume-auto-dismiss')"
+                              class="group pointer-events-none rounded-lg fixed inset-x-8 top-0 z-99 flex max-w-full flex-col gap-2 bg-transparent px-6 py-6 md:bottom-0 md:left-[unset] md:right-0 md:top-[unset] md:max-w-sm"
+                            >
+                              <template
+                                x-for="(notification, index) in notifications"
+                                x-bind:key="notification.id"
+                              >
+                                <!-- root div holds all of the notifications  -->
+                                <div>
+                                  <!-- Success Notification  -->
+                                  <template
+                                    x-if="notification.variant === 'success'"
+                                  >
+                                    <div
+                                      x-data="{ isVisible: false, timeout: null }"
+                                      x-cloak
+                                      x-show="isVisible"
+                                      class="pointer-events-auto relative rounded-lg border border-success bg-surface text-on-surface dark:bg-surface-dark dark:text-on-surface-dark"
+                                      role="alert"
+                                      x-on:pause-auto-dismiss.window="clearTimeout(timeout)"
+                                      x-on:resume-auto-dismiss.window=" timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)"
+                                      x-init="$nextTick(() => { isVisible = true }), (timeout = setTimeout(() => { isVisible = false, removeNotification(notification.id)}, displayDuration))"
+                                      x-transition:enter="transition duration-300 ease-out"
+                                      x-transition:enter-end="translate-y-0"
+                                      x-transition:enter-start="translate-y-8"
+                                      x-transition:leave="transition duration-300 ease-in"
+                                      x-transition:leave-end="-translate-x-24 opacity-0 md:translate-x-24"
+                                      x-transition:leave-start="translate-x-0 opacity-100"
+                                    >
+                                      <div
+                                        class="flex w-full items-center gap-2.5 text-white bg-black/60 border-2 border-green-500 rounded-lg p-4 transition-all duration-300"
+                                      >
+                                        <!-- Icon -->
+                                        <div
+                                          class="rounded-full bg-success/15 p-0.5 text-green-600"
+                                          aria-hidden="true"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                            class="size-5"
+                                            aria-hidden="true"
+                                          >
+                                            <path
+                                              fill-rule="evenodd"
+                                              d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                                              clip-rule="evenodd"
+                                            />
+                                          </svg>
+                                        </div>
+
+                                        <!-- Title & Message -->
+                                        <div class="flex flex-col gap-2">
+                                          <h3
+                                            x-cloak
+                                            x-show="notification.title"
+                                            class="text-sm font-semibold text-green-600"
+                                            x-text="notification.title"
+                                          ></h3>
+                                          <p
+                                            x-cloak
+                                            x-show="notification.message"
+                                            class="text-pretty text-sm"
+                                            x-text="notification.message"
+                                          ></p>
+                                        </div>
+
+                                        <!--Dismiss Button -->
+                                        <button
+                                          type="button"
+                                          class="ml-auto"
+                                          aria-label="dismiss notification"
+                                          x-on:click="(isVisible = false), removeNotification(notification.id)"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg viewBox="
+                                            0
+                                            0
+                                            24
+                                            24
+                                            stroke="currentColor"
+                                            fill="none"
+                                            stroke-width="2"
+                                            class="size-5 shrink-0"
+                                            aria-hidden="true"
+                                          >
+                                            <path
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M6 18L18 6M6 6l12 12"
+                                            />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </template>
+
+                                  <!-- Danger Notification  -->
+                                  <template
+                                    x-if="notification.variant === 'danger'"
+                                  >
+                                    <div
+                                      x-data="{ isVisible: false, timeout: null }"
+                                      x-cloak
+                                      x-show="isVisible"
+                                      class="pointer-events-auto relative rounded-lg border border-danger bg-surface text-on-surface dark:bg-surface-dark dark:text-on-surface-dark"
+                                      role="alert"
+                                      x-on:pause-auto-dismiss.window="clearTimeout(timeout)"
+                                      x-on:resume-auto-dismiss.window=" timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)"
+                                      x-init="$nextTick(() => { isVisible = true }), (timeout = setTimeout(() => { isVisible = false, removeNotification(notification.id)}, displayDuration))"
+                                      x-transition:enter="transition duration-300 ease-out"
+                                      x-transition:enter-end="translate-y-0"
+                                      x-transition:enter-start="translate-y-8"
+                                      x-transition:leave="transition duration-300 ease-in"
+                                      x-transition:leave-end="-translate-x-24 opacity-0 md:translate-x-24"
+                                      x-transition:leave-start="translate-x-0 opacity-100"
+                                    >
+                                      <div
+                                        class="flex w-full items-center gap-2.5 text-white bg-black/60 border-2 border-red-500 rounded-lg p-4 transition-all duration-300"
+                                      >
+                                        <!-- Icon -->
+                                        <div
+                                          class="rounded-full bg-danger/15 p-0.5 text-red-600"
+                                          aria-hidden="true"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                            class="size-5"
+                                            aria-hidden="true"
+                                          >
+                                            <path
+                                              fill-rule="evenodd"
+                                              d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+                                              clip-rule="evenodd"
+                                            />
+                                          </svg>
+                                        </div>
+
+                                        <!-- Title & Message -->
+                                        <div class="flex flex-col gap-2">
+                                          <h3
+                                            x-cloak
+                                            x-show="notification.title"
+                                            class="text-sm font-semibold text-red-600"
+                                            x-text="notification.title"
+                                          ></h3>
+                                          <p
+                                            x-cloak
+                                            x-show="notification.message"
+                                            class="text-pretty text-sm"
+                                            x-text="notification.message"
+                                          ></p>
+                                        </div>
+
+                                        <!--Dismiss Button -->
+                                        <button
+                                          type="button"
+                                          class="ml-auto"
+                                          aria-label="dismiss notification"
+                                          x-on:click="(isVisible = false), removeNotification(notification.id)"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg viewBox="
+                                            0
+                                            0
+                                            24
+                                            24
+                                            stroke="currentColor"
+                                            fill="none"
+                                            stroke-width="2"
+                                            class="size-5 shrink-0"
+                                            aria-hidden="true"
+                                          >
+                                            <path
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M6 18L18 6M6 6l12 12"
+                                            />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </template>
+
+                                  <!-- Warning Notification  -->
+                                  <template
+                                    x-if="notification.variant === 'warning'"
+                                  >
+                                    <div
+                                      x-data="{ isVisible: false, timeout: null }"
+                                      x-cloak
+                                      x-show="isVisible"
+                                      class="pointer-events-auto relative rounded-lg border border-warning bg-surface text-on-surface dark:bg-surface-dark dark:text-on-surface-dark"
+                                      role="alert"
+                                      x-on:pause-auto-dismiss.window="clearTimeout(timeout)"
+                                      x-on:resume-auto-dismiss.window=" timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)"
+                                      x-init="$nextTick(() => { isVisible = true }), (timeout = setTimeout(() => { isVisible = false, removeNotification(notification.id)}, displayDuration))"
+                                      x-transition:enter="transition duration-300 ease-out"
+                                      x-transition:enter-end="translate-y-0"
+                                      x-transition:enter-start="translate-y-8"
+                                      x-transition:leave="transition duration-300 ease-in"
+                                      x-transition:leave-end="-translate-x-24 opacity-0 md:translate-x-24"
+                                      x-transition:leave-start="translate-x-0 opacity-100"
+                                    >
+                                      <div
+                                        class="flex w-full items-center gap-2.5 text-white bg-black/60 border-2 border-yellow-500 rounded-lg p-4 transition-all duration-300"
+                                      >
+                                        <!-- Icon -->
+                                        <div
+                                          class="rounded-full bg-warning/15 p-0.5 text-yellow"
+                                          aria-hidden="true"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                            class="size-5"
+                                            aria-hidden="true"
+                                          >
+                                            <path
+                                              fill-rule="evenodd"
+                                              d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+                                              clip-rule="evenodd"
+                                            />
+                                          </svg>
+                                        </div>
+
+                                        <!-- Title & Message -->
+                                        <div class="flex flex-col gap-2">
+                                          <h3
+                                            x-cloak
+                                            x-show="notification.title"
+                                            class="text-sm font-semibold text-warning"
+                                            x-text="notification.title"
+                                          ></h3>
+                                          <p
+                                            x-cloak
+                                            x-show="notification.message"
+                                            class="text-pretty text-sm"
+                                            x-text="notification.message"
+                                          ></p>
+                                        </div>
+
+                                        <!--Dismiss Button -->
+                                        <button
+                                          type="button"
+                                          class="ml-auto"
+                                          aria-label="dismiss notification"
+                                          x-on:click="(isVisible = false), removeNotification(notification.id)"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg viewBox="
+                                            0
+                                            0
+                                            24
+                                            24
+                                            stroke="currentColor"
+                                            fill="none"
+                                            stroke-width="2"
+                                            class="size-5 shrink-0"
+                                            aria-hidden="true"
+                                          >
+                                            <path
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M6 18L18 6M6 6l12 12"
+                                            />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </template>
+                                </div>
+                              </template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="flex w-full min-w-0 flex-col gap-2 overflow-hidden rounded-md border border-gray-300 text-gray-700 max-h-[50vh]"
+                    >
+                      <!-- Scrollable rows -->
+                      <div class="flex-1 overflow-y-auto">
+                        <table class="w-full text-sm dark:text-on-surface-dark">
+                          <tbody
+                            class="divide-y divide-outline divide-gray-300 dark:divide-outline-dark"
+                          >
+                            <template x-for="item in causeList" :key="item.id">
+                              <tr>
+                                <!-- <td class="p-2 text-gray-700 font-semibold text-center">
+                                    <span x-text="item.category_name"></span>
+                                  </td> -->
+                                <td
+                                  class="p-2 text-gray-700 font-semibold text-left"
+                                >
+                                  <span x-text="item.cause_name"></span>
+                                </td>
+                                <td class="p-2">
+                                  <div
+                                    class="flex space-x-2 px-1 py-1 items-center"
+                                  >
+                                    <button
+                                      @click="decrementDonation(item.id)"
+                                      type="button"
+                                      class="text-lg text-gray-700 px-2 py-1 rounded-full"
+                                    >
+                                      −
+                                    </button>
+                                    <span
+                                      class="text-lg text-gray-700 font-semibold"
+                                      x-text="item.quantity"
+                                    ></span>
+                                    <button
+                                      @click="addDonation(item.id, item.cause_name, item.amount, item.category_name)"
+                                      type="button"
+                                      class="text-lg text-gray-700 px-2 py-1 rounded-full"
+                                    >
+                                      +
+                                    </button>
+                                    <button
+                                      @click="removeDonation(item.id)"
+                                      type="button"
+                                      class="bg-gray-200 text-gray-700 px-2 py-1 rounded-lg"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V4a1 1 0 011-1h6a1 1 0 011 1v3"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </td>
+                                <td
+                                  class="p-2 text-gray-700 text-right font-semibold"
+                                >
+                                  <span
+                                    x-text="(item.amount * item.quantity).toLocaleString()"
+                                  ></span>
+                                </td>
+                              </tr>
+                            </template>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- Fixed total row -->
+                      <div
+                        class="bg-gray-200 text-gray-700 border-t border-gray-300 px-4 py-2 flex justify-between font-bold"
+                      >
+                        <span>Total</span>
+                        <span>
+                          ₹
+                          <span
+                            x-text="(causeList.reduce((sum, i) => sum + i.amount * i.quantity, 0)).toLocaleString()"
+                          ></span>
+                        </span>
+                      </div>
+                      <div
+                        class="w-full"
+                        x-cloak
+                        x-show="currentUser || isLoggedIn"
+                      >
+                        <button
+                          @click="signOut()"
+                          class="flex items-center w-full justify-center gap-2 text-sm rounded text-gray-700 px-4 py-2 text-center hover:bg-gray-200"
+                        >
+                          <img
+                            class="h-5 w-5"
+                            src="https://img.icons8.com/ios/50/logout-rounded--v1.png"
+                            alt="login-rounded-right--v1"
+                          />
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Dialog Footer -->
+                  <div
+                    x-data="donateNow()"
+                    class="flex flex-col-reverse justify-between gap-2 p-3 bg-black/80 dark:border-outline-dark dark:bg-surface-dark/20 sm:flex-row sm:items-center md:justify-end"
+                  >
+                    <button
+                      x-on:click="modalIsOpen = false"
+                      type="button"
+                      class="text-white rounded-radius px-4 py-2 text-center text-sm font-medium tracking-wide text-on-surface transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:text-on-surface-dark dark:focus-visible:outline-primary-dark"
+                    >
+                      Go Back
+                    </button>
+                    <button
+                      x-show="isLoggedIn"
+                      x-on:click="payNow()"
+                      type="button"
+                      class="rounded-md bg-[#800020] border-3 border-[#FF3131] px-2 py-1 text-white text-sm font-medium transition hover:bg-white hover:text-black text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-danger dark:border-danger dark:text-onDanger dark:focus-visible:outline-danger"
+                    >
+                      Pay Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <button class="absolute top-1/2 -translate-y-1/2 right-4 pl-10" aria-label="dismiss banner">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="2.5" class="size-4 shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+
+    <footer class="bg-[#EEEEEE] text-gray-800">
+      <!-- Top Section -->
+      <div class="text-center pt-6">
+        <p class="pb-4 text-[15px] text-[#1D2833] font-normal font-roboto">
+          INTERNATIONAL SOCIETY FOR KRISHNA CONSCIOUSNESS<br />H NO 540, ISKCON,
+          GUT no 385, Galtare, Wada, Palghar 421303, Maharashtra.
+        </p>
+        <hr class="mx-auto w-full max-w-5xl border-t border-gray-400" />
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="font-bold text-md mb-5">Address</h3>
+            <p class="flex items-start text-sm font-thin font-roboto">
+              <svg
+                class="w-10 h-10 mt-1 mr-2 text-gray-600"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"
+                />
+              </svg>
+              Galtare, P.O. Hamrapur, Wada Taluka, District Palghar - 421 303,
+              Maharashtra, India
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-bold text-md mb-5">Day Visit</h3>
+            <p class="flex items-center text-sm pb-3 font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5a2 2 0 012-2h1.28a2 2 0 011.94 1.515l.7 2.8a2 2 0 01-.28 1.823l-1.32 1.65a11.037 11.037 0 005.04 5.04l1.65-1.32a2 2 0 011.823-.28l2.8.7A2 2 0 0121 17.72V19a2 2 0 01-2 2H18C9.163 21 3 14.837 3 6V5z"
+                /></svg
+              >+91-9920055993
+            </p>
+            <p class="flex items-center font-thin text-sm font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                /></svg
+              >dayvisits@iskcongev.com
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-bold text-md mb-5">Donations</h3>
+            <p class="flex items-center text-sm pb-3 font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5a2 2 0 012-2h1.28a2 2 0 011.94 1.515l.7 2.8a2 2 0 01-.28 1.823l-1.32 1.65a11.037 11.037 0 005.04 5.04l1.65-1.32a2 2 0 011.823-.28l2.8.7A2 2 0 0121 17.72V19a2 2 0 01-2 2H18C9.163 21 3 14.837 3 6V5z"
+                /></svg
+              >+91-9370950813
+            </p>
+            <p class="flex items-center text-sm font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                /></svg
+              >sevaoffice@iskcongev.com
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-bold text-md mb-5">Room Bookings</h3>
+            <p class="flex items-center text-sm pb-3 font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5a2 2 0 012-2h1.28a2 2 0 011.94 1.515l.7 2.8a2 2 0 01-.28 1.823l-1.32 1.65a11.037 11.037 0 005.04 5.04l1.65-1.32a2 2 0 011.823-.28l2.8.7A2 2 0 0121 17.72V19a2 2 0 01-2 2H18C9.163 21 3 14.837 3 6V5z"
+                /></svg
+              >+91-9226516922
+            </p>
+            <p class="flex items-center text-sm pb-3 font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5a2 2 0 012-2h1.28a2 2 0 011.94 1.515l.7 2.8a2 2 0 01-.28 1.823l-1.32 1.65a11.037 11.037 0 005.04 5.04l1.65-1.32a2 2 0 011.823-.28l2.8.7A2 2 0 0121 17.72V19a2 2 0 01-2 2H18C9.163 21 3 14.837 3 6V5z"
+                /></svg
+              >+91-9226516923
+            </p>
+            <p class="flex items-center text-sm font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                /></svg
+              >contacts@ecovillage.org.in
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div
+        class="bg-[radial-gradient(circle,_rgba(9,107,112,1)_0%,_rgba(20,57,82,1)_100%)] text-white pt-10 pb-2"
+      >
+        <div class="flex flex-col items-center justify-center gap-3">
+          <img
+            src="https://iskcongev.com/wp-content/uploads/2022/11/Logo-GEV-07.svg"
+            alt="ISKCON GEV"
+            class="w-25 h-25 mb-2 brightness-0 filter invert"
+          />
+          <div class="">
+            <p class="font-thin font-roboto mb-2 text-center text-[14px]">
+              ISKCON GOVARDHAN ECOVILLAGE ©2025
+            </p>
+            <p
+              class="font-thin font-roboto text-center italic text-[13px] text-gray-300"
+            >
+              Hare Krishna Hare Krishna Krishna Krishna Hare Hare! Hare Rama
+              Hare Rama Rama Rama Hare Hare!!
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex flex-col gap-3 px-4 pt-5 text-center text-[12px] font-roboto font-thin text-white sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:text-left"
+        >
+          <div>
+            <p>Copyright © 2025 ISKCON – Govardhan Ecovillage</p>
+          </div>
+          <div
+            class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 lg:justify-end"
+          >
+            <a href="#" class="hover:underline">Terms of Donations</a>
+            <span>|</span>
+            <a href="#" class="hover:underline">Privacy Policy</a>
+            <span>|</span>
+            <a href="#" class="hover:underline">Refund Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,1359 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="donation_script.js"></script>
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.cdnfonts.com/css/trajan-pro" rel="stylesheet" />
+    <link
+      rel="icon"
+      type="image"
+      href="https://iskcongev.com/wp-content/uploads/2022/11/Logo-GEV-07.png"
+    />
+    <title>Donate LP</title>
+    <style>
+      /* Custom styles for Trajan Pro font */
+      .font-trajan-pro {
+        font-family: "Trajan Pro", serif;
+      }
+      /* Custom styles for Roboto font */
+      .font-roboto {
+        font-family: "Roboto", sans-serif;
+      }
+      @media (max-width: 1023px) {
+        #mobileMenu > li[x-data] {
+          margin-bottom: 0.5rem;
+          border-bottom: 0 !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+        }
+        #mobileMenu > li[x-data] > button {
+          width: 100%;
+          border-radius: 1.75rem;
+          background: rgba(255, 255, 255, 0.12);
+          padding: 1.25rem 1.5rem;
+          font-family: "Roboto", sans-serif;
+          font-size: 1.05rem;
+          font-weight: 600;
+          letter-spacing: 0.03em;
+          color: #fff;
+          transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+        }
+        #mobileMenu > li[x-data] > button:hover {
+          background: rgba(255, 255, 255, 0.15);
+          color: #fff;
+        }
+        #mobileMenu > li[x-data] > div {
+          margin-top: 0.5rem;
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- navbar -->
+    <div x-data="categoryAndSubcategory()" x-init="init();">
+      <nav
+        x-data="{ mobileMenuIsOpen: false }"
+        x-on:click.away="mobileMenuIsOpen = false"
+        class="flex min-h-[85px] items-center justify-between border-outline px-4 py-4 sm:px-6 lg:px-10 dark:border-outline-dark bg-[linear-gradient(90deg,_rgba(9,107,112,1)_0%,_rgba(20,57,82,1)_100%)] z-[2] text-white"
+        aria-label="penguin ui menu"
+      >
+        <!-- Brand Logo -->
+        <a href="https://iskcongev.com/" class="">
+          <!-- <span>Peng<span class="text-primary dark:text-primary-dark">ui</span>n</span> -->
+          <img
+            class="size-[60px]"
+            src="https://iskcongev.com/wp-content/uploads/2022/11/Logo-GEV-07.png"
+            alt="ISKCON GEV LOGO"
+          />
+        </a>
+        <!-- Desktop Menu -->
+        <ul class="hidden items-center gap-4 lg:flex">
+          <li class="relative group">
+            <a
+              href="https://iskcongev.com/"
+              class="font-roboto text-sm font-medium tracking-wide hover:text-[#c9a470] dark:text-primary-dark dark:hover:text-primary-dark"
+              >HOME</a
+            >
+            <span
+              class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+            ></span>
+          </li>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false}"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+          'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                ABOUT
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://iskcongev.com/about-iskcon/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >About ISKCON</a
+              >
+              <a
+                href="https://iskcongev.com/about-srila-prabhupada/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >About Srila Prabhupada</a
+              >
+              <a
+                href="https://iskcongev.com/about-radhanath-swami/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >About Radhanath Swami</a
+              >
+              <a
+                href="https://iskcongev.com/our-philosophy/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Our Philosophy</a
+              >
+            </div>
+          </div>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+        'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                TEMPLES
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://iskcongev.com/visit-sri-sri-radha-vrindabanbehari-temple/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Visit Sri Sri Radha Vrindabanbehari Temple</a
+              >
+              <a
+                href="https://iskcongev.com/visit-sri-sri-radha-madanmohan-temple/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Visit Sri Sri Radha Madanmohan Temple</a
+              >
+            </div>
+          </div>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+      'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                VRINDAVAN FOREST
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://iskcongev.com/vf/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Holy Places</a
+              >
+              <a
+                href="https://iskcongev.com/vrindvan-forest/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >The Forest</a
+              >
+              <a
+                href="https://iskcongev.com/govardhan-hill/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Govardhan Hill</a
+              >
+              <a
+                href="https://iskcongev.com/srila-prabhupada-room/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Srila Prabhupada Room</a
+              >
+              <a
+                href="https://iskcongev.com/rupa-goswami-samadhi/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Rupa Goswami Samadhi</a
+              >
+              <a
+                href="https://iskcongev.com/sanatana-goswami-samadhi/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Sanatan Goswami Samadhi</a
+              >
+              <a
+                href="https://iskcongev.com/25-lilasthalis/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >25 Lilasthalis</a
+              >
+              <a
+                href="https://iskcongev.com/festivals-at-govardhan-ecovillage/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Festivals At Govardhan Ecovillage</a
+              >
+            </div>
+          </div>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+      'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                SOCIAL INITIATIVES
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://govardhanannakshetra.com/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Annaksheta</a
+              >
+              <a
+                href="https://www.grd.org.in/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Govardhan Rural Development</a
+              >
+              <a
+                href="https://www.ecovillage.org.in/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >ISKCON Govardhan Ashram</a
+              >
+            </div>
+          </div>
+
+          <div
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+      'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                GOSHALA
+                <svg
+                  class="w-2 h-2 m-2 text-white"
+                  fill="currentColor"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 15 15"
+                  aria-label="Menu dropdown icon"
+                >
+                  <path
+                    d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"
+                  ></path>
+                </svg>
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div
+              x-cloak
+              x-show="isOpen || openedWithKeyboard"
+              x-transition
+              x-trap="openedWithKeyboard"
+              x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+              x-on:keydown.down.prevent="$focus.wrap().next()"
+              x-on:keydown.up.prevent="$focus.wrap().previous()"
+              class="bg-white absolute top-14 left-0 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+              role="menu"
+            >
+              <a
+                href="https://iskcongev.com/about-goshala/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >About Goshala</a
+              >
+              <a
+                href="https://iskcongev.com/cow-products/"
+                class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                role="menuitem"
+                >Cow Products</a
+              >
+            </div>
+          </div>
+
+          <li class="relative group">
+            <a
+              href="https://www.ecovillage.org.in/contact"
+              class="font-roboto text-sm font-medium tracking-wide hover:text-[#c9a470] dark:text-primary-dark dark:hover:text-primary-dark"
+              >CONTACT US</a
+            >
+            <span
+              class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+            ></span>
+          </li>
+          <li class="relative group">
+            <a
+              href="https://iskcongev.com/one-day-tour/"
+              class="font-roboto text-sm font-medium tracking-wide hover:text-[#c9a470] dark:text-primary-dark dark:hover:text-primary-dark"
+              >VISIT ISKCON GEV</a
+            >
+            <span
+              class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+            ></span>
+          </li>
+          <li class="relative group">
+            <a
+              href="https://iskcongev.com/volunteer/"
+              class="font-roboto text-sm font-medium tracking-wide hover:text-[#c9a470] dark:text-primary-dark dark:hover:text-primary-dark"
+              >VOLUNTEER</a
+            >
+            <span
+              class="bg-[#c9a470] absolute top-13 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+            ></span>
+          </li>
+
+          <li x-show="!isLoggedIn">
+            <a
+              href="donation_description.html"
+              class="flex items-center justify-center rounded-full border border-white/30 px-4 py-2 font-roboto text-sm font-semibold tracking-wide text-white transition hover:bg-white hover:text-[#0f6670]"
+              >LOGIN</a
+            >
+          </li>
+
+          <div
+            x-show="isLoggedIn"
+            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
+            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 100)"
+            x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
+            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
+            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+            class="relative w-full md:w-fit"
+          >
+            <!-- Toggle Button -->
+            <li class="relative group">
+              <a
+                x-on:mouseover="isOpen = true"
+                x-on:keydown.space.prevent="openedWithKeyboard = true"
+                x-on:keydown.enter.prevent="openedWithKeyboard = true"
+                x-on:keydown.down.prevent="openedWithKeyboard = true"
+                class="inline-flex w-full items-center justify-between text-sm font-medium font-roboto tracking-wide md:w-auto md:justify-start hover:text-[#c9a470] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:focus-visible:outline-outline-dark-strong"
+                x-bind:class="isOpen || openedWithKeyboard ? 
+      'text-on-surface-strong dark:text-on-surface-dark-strong' : 'text-on-surface dark:text-on-surface-dark'"
+                x-bind:aria-expanded="isOpen || openedWithKeyboard"
+                aria-haspopup="true"
+              >
+                <img
+                  class="w-10 h-10 rounded-full"
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  alt="ISKCON GEV LOGO"
+                />
+
+                <!-- <svg class="w-2 h-2 m-2 text-white" fill="currentColor" width="8" height="8" viewBox="0 0 15 15" aria-label="Menu dropdown icon"><path d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"></path></svg>     -->
+              </a>
+              <span
+                class="bg-[#c9a470] absolute top-15 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100"
+              ></span>
+            </li>
+            <!-- Dropdown Menu -->
+            <div x-show="isLoggedIn">
+              <div
+                x-cloak
+                x-show="isOpen || openedWithKeyboard"
+                x-transition
+                x-trap="openedWithKeyboard"
+                x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+                x-on:keydown.down.prevent="$focus.wrap().next()"
+                x-on:keydown.up.prevent="$focus.wrap().previous()"
+                x-transition
+                class="bg-white absolute top-16 left-1/2 -translate-x-1/2 flex w-fit min-w-30 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+                role="menu"
+              >
+                <a
+                  href="/donor_profile.html"
+                  class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                  role="menuitem"
+                  >My Profile</a
+                >
+                <a
+                  href="#"
+                  @click="logout()"
+                  class="text-[#DD9B26] bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong"
+                  role="menuitem"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </ul>
+        <!-- Mobile Menu Button -->
+        <button
+          x-on:click="mobileMenuIsOpen = !mobileMenuIsOpen"
+          x-bind:aria-expanded="mobileMenuIsOpen"
+          type="button"
+          class="flex items-center justify-center rounded-full border border-white/30 bg-white/10 p-2 text-on-surface shadow-sm backdrop-blur-sm transition hover:bg-white/20 dark:text-on-surface-dark lg:hidden"
+          aria-label="mobile menu"
+          aria-controls="mobileMenu"
+        >
+          <svg
+            x-cloak
+            x-show="!mobileMenuIsOpen"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+          <svg
+            x-cloak
+            x-show="mobileMenuIsOpen"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <!-- Mobile Menu -->
+        <ul
+          x-cloak
+          x-show="mobileMenuIsOpen"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="-translate-y-full opacity-0"
+          x-transition:enter-end="translate-y-0 opacity-100"
+          x-transition:leave="transition ease-in duration-200"
+          x-transition:leave-start="translate-y-0 opacity-100"
+          x-transition:leave-end="-translate-y-full opacity-0"
+          id="mobileMenu"
+          class="fixed inset-0 z-40 h-screen overflow-y-auto bg-gradient-to-b from-[#1d3237] via-[#21484d] to-[#2a666d] px-4 pb-10 pt-0 text-sm text-white shadow-2xl lg:hidden sm:px-6"
+        >
+          <div
+            class="sticky top-0 z-10 -mx-4 mb-6 flex items-center justify-between border-b border-white/10 bg-[linear-gradient(90deg,_rgba(9,107,112,1)_0%,_rgba(20,57,82,1)_100%)] px-4 backdrop-blur min-h-[85px] sm:-mx-6 sm:px-6"
+          >
+            <img
+              class="size-[60px]"
+              src="https://iskcongev.com/wp-content/uploads/2022/11/Logo-GEV-07.png"
+              alt="ISKCON GEV LOGO"
+            />
+            <button
+              x-on:click="mobileMenuIsOpen = false"
+              type="button"
+              class="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/10"
+              aria-label="Close mobile menu"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <li x-show="!isLoggedIn" class="mb-2">
+            <a
+              href="donation_description.html"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 text-center font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >LOGIN</a
+            >
+          </li>
+          <li class="my-2">
+            <a
+              href="https://iskcongev.com/"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >HOME</a
+            >
+          </li>
+
+          <li x-data="{ isOpen: false }" class="border-b border-white/5 py-1">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              ABOUT
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://iskcongev.com/about-iskcon/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >About ISKCON</a
+              >
+              <a
+                href="https://iskcongev.com/about-srila-prabhupada/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >About Srila Prabhupada</a
+              >
+              <a
+                href="https://iskcongev.com/about-radhanath-swami/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >About Radhanath Swami</a
+              >
+              <a
+                href="https://iskcongev.com/our-philosophy/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Our Philosophy</a
+              >
+            </div>
+          </li>
+
+          <li x-data="{ isOpen: false }" class="border-b border-white/5 py-1">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              TEMPLES
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://iskcongev.com/visit-sri-sri-radha-vrindabanbehari-temple/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Visit Sri Sri Radha Vrindabanbehari Temple</a
+              >
+              <a
+                href="https://iskcongev.com/visit-sri-sri-radha-madanmohan-temple/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Visit Sri Sri Radha Madanmohan Temple</a
+              >
+            </div>
+          </li>
+
+          <li x-data="{ isOpen: false }" class="border-b border-white/5 py-1">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              VRINDAVAN FOREST
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://iskcongev.com/vf/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Holy Places</a
+              >
+              <a
+                href="https://iskcongev.com/vrindvan-forest/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >The Forest</a
+              >
+              <a
+                href="https://iskcongev.com/govardhan-hill/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Govardhan Hill</a
+              >
+              <a
+                href="https://iskcongev.com/srila-prabhupada-room/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Srila Prabhupada Room</a
+              >
+              <a
+                href="https://iskcongev.com/rupa-goswami-samadhi/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Rupa Goswami Samadhi</a
+              >
+              <a
+                href="https://iskcongev.com/sanatana-goswami-samadhi/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Sanatan Goswami Samadhi</a
+              >
+              <a
+                href="https://iskcongev.com/25-lilasthalis/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >25 Lilasthalis</a
+              >
+              <a
+                href="https://iskcongev.com/festivals-at-govardhan-ecovillage/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Festivals At Govardhan Ecovillage</a
+              >
+            </div>
+          </li>
+
+          <li x-data="{ isOpen: false }" class="border-b border-white/5 py-1">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              SOCIAL INITIATIVES
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://govardhanannakshetra.com/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Annaksheta</a
+              >
+              <a
+                href="https://www.grd.org.in/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Govardhan Rural Development</a
+              >
+              <a
+                href="https://www.ecovillage.org.in/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >ISKCON Govardhan Ashram</a
+              >
+            </div>
+          </li>
+
+          <li
+            x-data="{ isOpen: false }"
+            class="mb-4 border-b border-white/5 py-1"
+          >
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="flex w-full items-center justify-between py-1 font-roboto text-[1.02rem] font-semibold tracking-wide text-white transition hover:text-white/90"
+              x-bind:aria-expanded="isOpen"
+            >
+              GOSHALA
+              <svg
+                x-bind:class="isOpen ? 'rotate-180' : ''"
+                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                class="h-6 w-6 shrink-0 transition-transform duration-200"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              x-cloak
+              x-show="isOpen"
+              x-transition
+              class="mt-2 mb-2 overflow-hidden rounded-[1.5rem] bg-[#31484d]/95 px-3 py-2 shadow-lg"
+            >
+              <a
+                href="https://iskcongev.com/about-goshala/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >About Goshala</a
+              >
+              <a
+                href="https://iskcongev.com/cow-products/"
+                @click="mobileMenuIsOpen = false"
+                class="block rounded-xl px-3 py-2 font-roboto text-sm font-medium tracking-wide text-white/90 transition hover:bg-white/10 hover:text-white"
+                >Cow Products</a
+              >
+            </div>
+          </li>
+
+          <li class="mb-2">
+            <a
+              href="https://iskcongev.com/cow-products/"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >CONTACT US</a
+            >
+          </li>
+          <li class="mb-2">
+            <a
+              href="https://iskcongev.com/one-day-tour/"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >VISIT ISKCON GEV</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://iskcongev.com/volunteer/"
+              @click="mobileMenuIsOpen = false"
+              class="block rounded-[1.75rem] bg-white/12 px-6 py-5 font-roboto text-[1.05rem] font-semibold tracking-wide text-white transition hover:bg-white/15"
+              >VOLUNTEER</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Donation Info -->
+
+      <section
+        class="bg-transparent bg-gradient-to-b from-[#096B70] to-white py-8"
+      >
+        <div class="mx-auto w-full max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <h2
+            class="font-trajan-pro leading-[1.6] text-2xl sm:text-3xl md:text-4xl font-thin antialiased tracking-wide mb-5 text-white"
+          >
+            DONATE FOR A CAUSE
+          </h2>
+          <p
+            class="text-center font-roboto tracking-wide text-base sm:text-lg md:text-xl text-gray-700 mb-4 max-w-3xl mx-auto"
+          >
+            <strong>As said in Bhagavad Gita 18.5</strong>
+            <br />
+            Acts of sacrifice, charity and penance are not to be given up; they
+            must be performed.
+            <br />
+            Indeed, sacrifice, charity and penance purify even the great souls.
+          </p>
+        </div>
+      </section>
+
+      <!-- filter and cards -->
+
+      <div class="space-y-6">
+        <!-- Categories -->
+        <div
+          class="mx-auto flex w-full max-w-7xl flex-wrap justify-center gap-2 px-4 sm:px-6 lg:px-8"
+        >
+          <button
+            @click="fetchAllSubCategories(); selectedCategoryId = null"
+            :class="selectedCategoryId === null 
+      ? 'bg-[#a6f1f5] font-bold text-black' 
+      : 'bg-[#096b70] text-white'"
+            class="rounded-full px-4 py-2 text-sm transition-colors duration-200 hover:opacity-75 focus:outline-none sm:text-base"
+          >
+            All
+          </button>
+
+          <template x-for="category in categories" :key="category.id">
+            <button
+              :class="selectedCategoryId === category.id 
+        ? 'bg-[#a6f1f5] font-bold text-black' 
+        : 'bg-[#096b70] text-white'"
+              class="rounded-full px-4 py-2 text-sm transition-colors duration-200 hover:opacity-75 focus:outline-none sm:text-base"
+              x-text="category.name"
+              @click="fetchSubCategoriesByCategory(category.id)"
+            ></button>
+          </template>
+
+          <!-- Skeleton loading state -->
+          <template x-if="loadingCategories">
+            <div class="flex flex-wrap gap-2">
+              <!-- Skeleton for 'All' button -->
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-16 rounded-full"
+              ></div>
+              <!-- Skeletons for other buttons (random widths for visual effect) -->
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-20 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-24 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-16 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-20 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-28 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-20 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-24 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-16 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-20 rounded-full"
+              ></div>
+              <div
+                class="animate-pulse bg-gray-200 h-8 w-28 rounded-full"
+              ></div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Subcategory Cards -->
+        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-7">
+          <template x-if="loadingSubCategories">
+            <p class="text-center text-gray-500">Loading subcategories...</p>
+          </template>
+          <template x-if="!loadingSubCategories && subCategories.length === 0">
+            <div
+              class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
+            >
+              <div class="card">
+                <article
+                  class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark"
+                >
+                  <div class="overflow-hidden">
+                    <img
+                      src="http://localhost:8080/uploads/images/1750253811649_Deity-Seva.jpg"
+                      class="aspect-[4/3] w-full object-cover transition duration-700 ease-out group-hover:scale-105"
+                      alt=""
+                    />
+                  </div>
+                  <div class="flex flex-col gap-4 p-6">
+                    <h3
+                      x-text="categoryName"
+                      class="font-['Trajan_Pro'] text-base font-normal leading-snug text-on-surface-strong break-words text-center dark:text-on-surface-dark-strong sm:text-lg"
+                    ></h3>
+                    <button
+                      x-on:click="goToDescriptionPage('',categoryIdForDescription)"
+                      type="button"
+                      class="bg-[#FDDA0D] border-3 border-[#FAFA33] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius"
+                    >
+                      Donate Now
+                    </button>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </template>
+          <div
+            class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
+          >
+            <template
+              x-for="subCategory in subCategories"
+              :key="subCategory.id"
+            >
+              <div class="card">
+                <article
+                  class="group flex rounded-xl flex-col overflow-hidden bg-[#e1f3f5] border-outline bg-surface-alt text-on-surface dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark"
+                >
+                  <div class="overflow-hidden">
+                    <img
+                      src="http://localhost:8080/uploads/images/1750253811649_Deity-Seva.jpg"
+                      class="aspect-[4/3] w-full object-cover transition duration-700 ease-out group-hover:scale-105"
+                      alt=""
+                    />
+                  </div>
+                  <div class="flex flex-col gap-4 p-6">
+                    <h3
+                      x-text="subCategory.name"
+                      class="font-['Trajan_Pro'] text-base font-normal leading-snug text-on-surface-strong break-words text-center dark:text-on-surface-dark-strong sm:text-lg"
+                    ></h3>
+                    <button
+                      x-on:click="goToDescriptionPage(subCategory.id,subCategory.parent_id)"
+                      type="button"
+                      class="bg-[#FDDA0D] border-3 border-[#FAFA33] rounded-lg px-4 py-2 text-center text-sm font-medium tracking-wide text-on-primary transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark rounded-radius"
+                    >
+                      Donate Now
+                    </button>
+                  </div>
+                </article>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+
+    <footer class="bg-[#EEEEEE] text-gray-800">
+      <!-- Top Section -->
+      <div class="text-center pt-6">
+        <p class="pb-4 text-[15px] text-[#1D2833] font-normal font-roboto">
+          INTERNATIONAL SOCIETY FOR KRISHNA CONSCIOUSNESS<br />H NO 540, ISKCON,
+          GUT no 385, Galtare, Wada, Palghar 421303, Maharashtra.
+        </p>
+        <hr class="mx-auto w-full max-w-5xl border-t border-gray-400" />
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="font-bold text-md mb-5">Address</h3>
+            <p class="flex items-start text-sm font-thin font-roboto">
+              <svg
+                class="w-10 h-10 mt-1 mr-2 text-gray-600"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"
+                />
+              </svg>
+              Galtare, P.O. Hamrapur, Wada Taluka, District Palghar - 421 303,
+              Maharashtra, India
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-bold text-md mb-5">Day Visit</h3>
+            <p class="flex items-center text-sm pb-3 font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5a2 2 0 012-2h1.28a2 2 0 011.94 1.515l.7 2.8a2 2 0 01-.28 1.823l-1.32 1.65a11.037 11.037 0 005.04 5.04l1.65-1.32a2 2 0 011.823-.28l2.8.7A2 2 0 0121 17.72V19a2 2 0 01-2 2H18C9.163 21 3 14.837 3 6V5z"
+                /></svg
+              >+91-9920055993
+            </p>
+            <p class="flex items-center font-thin text-sm font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                /></svg
+              >dayvisits@iskcongev.com
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-bold text-md mb-5">Donations</h3>
+            <p class="flex items-center text-sm pb-3 font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5a2 2 0 012-2h1.28a2 2 0 011.94 1.515l.7 2.8a2 2 0 01-.28 1.823l-1.32 1.65a11.037 11.037 0 005.04 5.04l1.65-1.32a2 2 0 011.823-.28l2.8.7A2 2 0 0121 17.72V19a2 2 0 01-2 2H18C9.163 21 3 14.837 3 6V5z"
+                /></svg
+              >+91-9370950813
+            </p>
+            <p class="flex items-center text-sm font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                /></svg
+              >sevaoffice@iskcongev.com
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-bold text-md mb-5">Room Bookings</h3>
+            <p class="flex items-center text-sm pb-3 font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5a2 2 0 012-2h1.28a2 2 0 011.94 1.515l.7 2.8a2 2 0 01-.28 1.823l-1.32 1.65a11.037 11.037 0 005.04 5.04l1.65-1.32a2 2 0 011.823-.28l2.8.7A2 2 0 0121 17.72V19a2 2 0 01-2 2H18C9.163 21 3 14.837 3 6V5z"
+                /></svg
+              >+91-9226516922
+            </p>
+            <p class="flex items-center text-sm pb-3 font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5a2 2 0 012-2h1.28a2 2 0 011.94 1.515l.7 2.8a2 2 0 01-.28 1.823l-1.32 1.65a11.037 11.037 0 005.04 5.04l1.65-1.32a2 2 0 011.823-.28l2.8.7A2 2 0 0121 17.72V19a2 2 0 01-2 2H18C9.163 21 3 14.837 3 6V5z"
+                /></svg
+              >+91-9226516923
+            </p>
+            <p class="flex items-center text-sm font-thin font-roboto">
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                /></svg
+              >contacts@ecovillage.org.in
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div
+        class="bg-[radial-gradient(circle,_rgba(9,107,112,1)_0%,_rgba(20,57,82,1)_100%)] text-white pt-10 pb-2"
+      >
+        <div class="flex flex-col items-center justify-center gap-3">
+          <img
+            src="https://iskcongev.com/wp-content/uploads/2022/11/Logo-GEV-07.svg"
+            alt="ISKCON GEV"
+            class="w-25 h-25 mb-2 brightness-0 filter invert"
+          />
+          <div class="">
+            <p class="font-thin font-roboto mb-2 text-center text-[14px]">
+              ISKCON GOVARDHAN ECOVILLAGE ©2025
+            </p>
+            <p
+              class="font-thin font-roboto text-center italic text-[13px] text-gray-300"
+            >
+              Hare Krishna Hare Krishna Krishna Krishna Hare Hare! Hare Rama
+              Hare Rama Rama Rama Hare Hare!!
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex flex-col gap-3 px-4 pt-5 text-center text-[12px] font-roboto font-thin text-white sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:text-left"
+        >
+          <div>
+            <p>Copyright © 2025 ISKCON – Govardhan Ecovillage</p>
+          </div>
+          <div
+            class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 lg:justify-end"
+          >
+            <a href="#" class="hover:underline">Terms of Donations</a>
+            <span>|</span>
+            <a href="#" class="hover:underline">Privacy Policy</a>
+            <span>|</span>
+            <a href="#" class="hover:underline">Refund Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
